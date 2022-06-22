@@ -1,9 +1,14 @@
 import express from 'express';
 import mongoose from 'mongoose';
-import { MONGODB_URI, PORT } from './config/config.js';
+import { MONGODB_URI, PORT } from './src/config/config.js';
+import taskRouter from './src/routes/taskRouter.js';
+// import drop from './src/utils/dropDB.js';
 
 const app = express();
 app.use(express.json());
+
+// routers
+app.use('/api/tasks', taskRouter);
 
 async function startApp() {
   try {
