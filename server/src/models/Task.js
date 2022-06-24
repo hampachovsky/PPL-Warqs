@@ -21,6 +21,12 @@ const TaskSchema = new mongoose.Schema({
   },
 });
 
+TaskSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    delete returnedObject.__v;
+  },
+});
+
 const Task = mongoose.model('Task', TaskSchema);
 
 export default Task;

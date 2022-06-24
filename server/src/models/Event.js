@@ -24,6 +24,12 @@ const EventSchema = new mongoose.Schema({
   },
 });
 
+EventSchema.set('toJSON', {
+  transform: (document, returnedObject) => {
+    delete returnedObject.__v;
+  },
+});
+
 const Event = mongoose.model('Event', EventSchema);
 
 export default Event;

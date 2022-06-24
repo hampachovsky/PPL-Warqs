@@ -1,14 +1,16 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import { MONGODB_URI, PORT } from './src/config/config.js';
-import taskRouter from './src/routes/taskRouter.js';
+import router from './src/routes/index.js';
+import cors from 'cors';
 // import drop from './src/utils/dropDB.js';
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 // routers
-app.use('/api/tasks', taskRouter);
+app.use('/api', router);
 
 async function startApp() {
   try {

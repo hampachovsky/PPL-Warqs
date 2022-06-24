@@ -24,7 +24,7 @@ class TaskController {
     try {
       const { id } = req.params;
       if (!id) {
-        res.status(400).json({ message: 'Id missed' });
+        res.status(400).json({ error: 'Id missed' });
       }
       const task = await Task.findById(id);
       return res.json(task);
@@ -32,12 +32,13 @@ class TaskController {
       res.status(500).json(e);
     }
   }
+
   async update(req, res) {
     try {
       const { id } = req.params;
       const task = req.body;
       if (!id) {
-        res.status(400).json({ message: 'Id missed' });
+        res.status(400).json({ error: 'Id missed' });
       }
       const updatedTask = await Task.findByIdAndUpdate(id, task, { new: true });
       return res.json(updatedTask);
@@ -45,11 +46,12 @@ class TaskController {
       res.status(500).json(e);
     }
   }
+
   async delete(req, res) {
     try {
       const { id } = req.params;
       if (!id) {
-        res.status(400).json({ message: 'Id missed' });
+        res.status(400).json({ error: 'Id missed' });
       }
       await Task.findByIdAndRemove(id);
       return res.json(`Deleted ${id}`);
