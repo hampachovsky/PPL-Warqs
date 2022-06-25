@@ -3,7 +3,7 @@ import Task from '../models/Task.js';
 class TaskController {
   async getAll(req, res) {
     try {
-      const tasks = await Task.find();
+      const tasks = await Task.find().populate('author');
       return res.json(tasks);
     } catch (e) {
       res.status(500).json(e);
@@ -26,7 +26,7 @@ class TaskController {
       if (!id) {
         res.status(400).json({ error: 'Id missed' });
       }
-      const task = await Task.findById(id);
+      const task = await Task.findById(id).populate('author');
       return res.json(task);
     } catch (e) {
       res.status(500).json(e);

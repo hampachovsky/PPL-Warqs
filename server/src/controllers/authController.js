@@ -30,7 +30,7 @@ class AuthController {
     try {
       const { username, password } = req.body;
       if (!(password || username)) return res.status(500).json({ error: 'User data missing' });
-      const user = await User.findOne({ username });
+      const user = await User.findOne({ username }).populate('tasks');
       if (!user) return res.status(404).json({ error: 'User not found' });
       const validPassword = await bcrypt.compareSync(password, user.password);
       if (!validPassword) return res.status(401).json({ error: 'Invalid username or password' });
@@ -49,13 +49,14 @@ class AuthController {
   async getMe(req, res) {
     try {
       const userFromToken = req.user;
-      const user = await User.findById(userFromToken._id);
+      const user = await User.findById(userFromToken._id).populate('tasks');
       res.status(200).json(user);
     } catch (e) {
       console.log(e);
       res.status(400).json({ error: 'failed  take user' });
     }
   }
+
   async getAll(req, res) {
     try {
       const users = await User.find();
