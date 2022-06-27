@@ -5,7 +5,6 @@ import router from './src/routes/index.js';
 import cors from 'cors';
 import unknownEndpoint from './src/middleware/unknowEndpoint.js';
 import tokenExtractor from './src/middleware/tokenExtractor.js';
-// import drop from './src/utils/dropDB.js';
 
 const app = express();
 app.use(express.json());

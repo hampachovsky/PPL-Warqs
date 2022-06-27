@@ -8,12 +8,6 @@ const UserSchema = new mongoose.Schema({
     default: Date.now,
     immutable: true,
   },
-  tasks: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Task',
-    },
-  ],
   events: [
     {
       type: mongoose.Schema.Types.ObjectId,

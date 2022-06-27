@@ -15,9 +15,9 @@ const TaskSchema = new mongoose.Schema({
     default: Date.now,
     immutable: true,
   },
-  author: {
+  event: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'Event',
   },
 });
 

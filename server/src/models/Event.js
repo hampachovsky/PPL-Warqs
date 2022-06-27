@@ -9,6 +9,11 @@ const EventSchema = new mongoose.Schema({
     type: String,
     minLength: 2,
   },
+  eventType: {
+    type: String,
+    enum: ['minor', 'important', 'warning'],
+    default: 'minor',
+  },
   eventDate: {
     type: Date,
     required: true,
@@ -18,6 +23,12 @@ const EventSchema = new mongoose.Schema({
     default: Date.now,
     immutable: true,
   },
+  tasks: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Task',
+    },
+  ],
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "DANGEROUS_db-drop": "node ./src/utils/drop.js",
+    "DANGEROUS_db-seed": "node ./src/utils/seeder.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -17,6 +19,7 @@
     "mongoose": "^6.4.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.3.0",
     "nodemon": "^2.0.16"
   }
 }
