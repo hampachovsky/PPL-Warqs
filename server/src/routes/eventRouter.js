@@ -5,9 +5,9 @@ import userExtractor from '../middleware/userExtractor.js';
 const router = new Router();
 
 router.get('/all', userExtractor, EventController.getAll);
-router.get('/:id', EventController.getBy);
-/* router.post('/', TaskController.create);
-router.put('/:id', TaskController.update);
-router.delete('/:id', TaskController.delete);*/
+router.get('/:id', userExtractor, EventController.getBy);
+router.post('/', userExtractor, EventController.create);
+router.delete('/:id', userExtractor, EventController.delete);
+router.put('/:id', EventController.update);
 
 export default router;

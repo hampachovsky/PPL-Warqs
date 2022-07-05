@@ -2,6 +2,7 @@ import Router from 'express';
 import taskRouter from './taskRouter.js';
 import authRouter from './authRouter.js';
 import eventRouter from './eventRouter.js';
+import userExtractor from '../middleware/userExtractor.js';
 
 const router = new Router();
 

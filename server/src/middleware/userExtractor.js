@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import 'dotenv/config';
 
 const userExtractor = (req, res, next) => {
   try {
@@ -8,7 +9,8 @@ const userExtractor = (req, res, next) => {
     req.user = decodedData;
 
     next();
-  } catch (e) {
+  } catch (error) {
+    console.log(error);
     res.status(400).json({ error: 'authorization error' });
   }
 };

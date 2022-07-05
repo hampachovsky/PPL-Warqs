@@ -1,4 +1,5 @@
 import Task from '../models/Task.js';
+import Event from '../models/Event.js';
 
 class TaskController {
   async getAll(req, res) {
@@ -12,11 +13,23 @@ class TaskController {
 
   async create(req, res) {
     try {
-      const { text, author, completed, event } = req.body;
-      const task = await Task.create({ text, author, completed, event });
-      res.status(200).json(task);
-    } catch (e) {
-      res.status(500).json(e);
+      const { text, eventId } = req.body;
+      const foundedEvent = await Event.findById(eventId);
+      if (!eventId) {
+        return res.status(500).json({ error: 'Event id not provided' });
+      }
+      if (!text) return res.status(400).json({ error: 'Text not provided' });
+      const taskToAdd = {
+        text,
+        event: foundedEvent._id,
+      };
+      console.log(taskToAdd);
+      const task = await Task.create(taskToAdd);
+      await Event.findByIdAndUpdate(foundedEvent._id, { ...foundedEvent, tasks: foundedEvent.tasks.push(task._id) });
+      return res.status(200).json(task);
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json({ error: 'Create task error' });
     }
   }
 
@@ -24,7 +37,7 @@ class TaskController {
     try {
       const { id } = req.params;
       if (!id) {
-        res.status(400).json({ error: 'Id missed' });
+        res.status(400).json({ error: 'Id not provided' });
       }
       const task = await Task.findById(id);
       return res.json(task);
@@ -42,21 +55,28 @@ class TaskController {
       }
       const updatedTask = await Task.findByIdAndUpdate(id, task, { new: true });
       return res.status(200).json(updatedTask);
-    } catch (e) {
-      res.status(500).json(e);
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ error: 'Update task error' });
     }
   }
 
   async delete(req, res) {
     try {
-      const { id } = req.params;
-      if (!id) {
-        res.status(400).json({ error: 'Id missed' });
+      const taskId = req.params.id;
+      if (!taskId) {
+        return res.status(500).json({ error: 'Id of task not provided' });
       }
-      await Task.findByIdAndRemove(id);
-      return res.status(200).json(`Deleted ${id}`);
-    } catch (e) {
-      res.status(500).json(e);
+      const task = await Task.findById(taskId);
+      const foundedEvent = await Event.findById(task.event._id);
+      foundedEvent.tasks = foundedEvent.tasks.filter((t) => t._id.toString() !== task._id);
+      await foundedEvent.save();
+
+      await Task.findByIdAndRemove(task._Id, { new: true });
+      return res.status(200).json(null);
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ error: 'failed delete task' });
     }
   }
 }
