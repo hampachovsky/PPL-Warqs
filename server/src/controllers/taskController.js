@@ -7,7 +7,7 @@ class TaskController {
       const tasks = await Task.find();
       return res.status(200).json(tasks);
     } catch (e) {
-      res.status(500).json(e);
+      return res.status(500).json(e);
     }
   }
 
@@ -37,12 +37,13 @@ class TaskController {
     try {
       const { id } = req.params;
       if (!id) {
-        res.status(400).json({ error: 'Id not provided' });
+        return res.status(400).json({ error: 'Id not provided' });
       }
       const task = await Task.findById(id);
       return res.json(task);
-    } catch (e) {
-      res.status(500).json(e);
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ error: 'failed take event' });
     }
   }
 
@@ -57,7 +58,7 @@ class TaskController {
       return res.status(200).json(updatedTask);
     } catch (err) {
       console.log(err);
-      res.status(500).json({ error: 'Update task error' });
+      return res.status(500).json({ error: 'Update task error' });
     }
   }
 

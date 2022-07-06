@@ -11,7 +11,6 @@ class EventController {
         return res.status(500).json({ error: 'User from token not found' });
       }
       const events = await Event.find({ author: user._id }).populate('tasks');
-      //  const events = await Event.find();
       return res.status(200).json(events);
     } catch (error) {
       console.log(error);
@@ -87,7 +86,7 @@ class EventController {
 
     user.events = user.events.filter((e) => e._id.toString() !== eventId);
     await user.save();
-    const event = await Event.findByIdAndRemove(eventId);
+    await Event.findByIdAndRemove(eventId);
     await Task.deleteMany({ event: eventId });
     return res.status(200).json(null);
   }
@@ -96,16 +95,49 @@ class EventController {
     return res.status(400).json({ error: 'failed create event' });
   }
 
-  //TODO: GET BY "TYPE": WARNING...; GET BY "DATE" = "NOW" | "2023" => NOW(THIS YEAR) = DEFAULT
   async getBy(req, res) {
     try {
-      const id = req.params.id;
-      const events = await Event.findById({ _id: id }).populate('tasks');
-
+      const eventType = req.query.type;
+      const date = req.query.date;
+      const queryString = req.query.queryString;
+      let events = await Event.find();
+      if (queryString) {
+        const regexQuery = {
+          title: new RegExp(req.query.queryString, 'i'),
+        };
+        events = await Event.find(regexQuery);
+      }
+      if (eventType === 'minor' || eventType === 'warning' || eventType === 'important') {
+        events = events.filter((event) => event.eventType === eventType);
+      }
+      if (date === 'earliest') {
+        events = events.sort((a, b) => a.eventDate - b.eventDate);
+      } else if (date === 'newest') {
+        events = events.sort((a, b) => b.eventDate - a.eventDate);
+      }
       return res.status(200).json(events);
     } catch (error) {
       console.log(error);
-      return res.status(400).json({ error: 'failed take all events' });
+      return res.status(400).json({ error: 'failed take events' });
+    }
+  }
+
+  async getOne(req, res) {
+    try {
+      const { id } = req.params;
+      const userFromToken = req.user;
+      const user = await User.findById(userFromToken._id);
+      if (!user) {
+        return res.status(500).json({ error: 'User from token not found' });
+      }
+      if (!id) {
+        res.status(400).json({ error: 'Id not provided' });
+      }
+      const event = await Event.find({ _id: id, author: user._id });
+      return res.status(200).json(event);
+    } catch (error) {
+      console.log(error);
+      return res.status(400).json({ error: 'failed take event' });
     }
   }
 }
