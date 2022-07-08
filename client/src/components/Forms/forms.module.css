@@ -1,0 +1,29 @@
+.field {
+  text-transform: none;
+  height: 48px !important;
+  line-height: 48px !important;
+  width: 270px !important;
+  padding: 0 20px;
+  font-size: 15px;
+  box-sizing: border-box;
+  font-weight: 400;
+  opacity: 1;
+  margin-bottom: 0.5rem;
+  box-shadow: none !important;
+  margin: 0;
+  margin-top: 0.5rem;
+}
+
+
+.submitBtn {
+  width: 270px;
+  color: rgb(255, 255, 255);
+  padding: 0;
+  font-size: 1.25rem !important;
+  line-height: 1.25rem !important;
+  cursor: pointer;
+  outline: none !important;
+  border: none;
+  overflow: visible;
+  font: inherit;
+}
