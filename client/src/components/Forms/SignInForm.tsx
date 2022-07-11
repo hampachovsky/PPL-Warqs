@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import * as yup from 'yup';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import style from './forms.module.css';
@@ -26,7 +26,7 @@ interface IFormInput {
 
 // TODO: If Remeber me checked = window.localstorage.set(token) esle nothing...;
 export const SignInForm: React.FC = () => {
-  const isLoading = false;
+  const [isLoading, setIsLoading] = useState(false);
   const {
     handleSubmit,
     control,
@@ -73,7 +73,7 @@ export const SignInForm: React.FC = () => {
           />
 
           <Button
-            disabled={false}
+            disabled={!!errors}
             className={style.submitBtn}
             size='large'
             type='primary'

@@ -1,4 +1,3 @@
-import { Typography } from 'antd';
 import { SignInForm } from 'components/Forms/SignInForm';
 import React from 'react';
 

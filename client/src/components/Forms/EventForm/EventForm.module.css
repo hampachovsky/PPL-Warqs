@@ -1,0 +1,18 @@
+.field {
+  width: 300px;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  height: 48px !important;
+
+}
+
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.submitBtn {
+  width: 360px;
+  margin-top: 0.5rem;
+}

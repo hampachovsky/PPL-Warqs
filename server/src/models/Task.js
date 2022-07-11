@@ -24,6 +24,7 @@ const TaskSchema = new mongoose.Schema({
 TaskSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     delete returnedObject.__v;
+    delete returnedObject.createdAt;
   },
 });
 
