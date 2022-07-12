@@ -1,10 +1,10 @@
-.addEventBtn {
+.addTodoBtn {
   width: 360px;
   height: 48px;
   background:  #001529 !important;
   color: #fff; 
 }
 
-.addEventBtn:hover {
+.addTodoBtn:hover {
   color: #1890ff; 
 }

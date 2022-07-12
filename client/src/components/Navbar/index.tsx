@@ -1,10 +1,10 @@
-import { Col, Image, Menu, MenuProps, Row } from 'antd';
-import React, { useState } from 'react';
-import style from './Navbar.module.css';
 import { MenuOutlined } from '@ant-design/icons';
+import { Col, Image, Menu, MenuProps, Row } from 'antd';
 import logoUrl from 'assets/logo.svg';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { routes } from 'routes';
+import style from './Navbar.module.css';
 
 // , onClick: () => useNavigate('/', { replace: true })
 export const Navbar: React.FC = () => {

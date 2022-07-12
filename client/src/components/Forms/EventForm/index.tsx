@@ -1,8 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Col, DatePicker, Input, Modal, Radio, Row, Space, Typography } from 'antd';
+import { Button, DatePicker, Input, Modal, Radio, Row, Space, Typography } from 'antd';
 import { EventFormType, eventType } from 'models/Event';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { capitalizeFirstLetter } from 'utils/capitalizeFirstLetter';
 import { ErrorMessage } from '../ErrorMessage';
@@ -12,18 +12,19 @@ import { editEventSchema } from './validationSchemes/editEventSchema';
 
 type PropsType = {
   isModalVisible: boolean;
-  isEditing: boolean;
+  isEditing?: boolean;
   onSubmit: (data: EventFormType) => void;
   onCancel: () => void;
 };
 
-export const EventForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCancel, isEditing }) => {
+export const EventForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCancel, isEditing = false }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const {
     handleSubmit,
     control,
-    formState: { errors, isDirty, isValid, isSubmitting },
+    reset,
+    formState: { errors, isDirty, isValid, isSubmitting, isSubmitSuccessful },
   } = useForm<EventFormType>({
     defaultValues: {
       title: '',
@@ -33,12 +34,17 @@ export const EventForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCan
     },
     resolver: yupResolver(isEditing ? editEventSchema : createEventSchema),
     mode: 'onBlur',
+    reValidateMode: 'onSubmit',
   });
 
   const onClickSumbit: SubmitHandler<EventFormType> = (data) => {
     console.log('data', data);
     console.log('evt date', moment(data.eventDate).format());
   };
+
+  useEffect(() => {
+    reset();
+  }, [isSubmitSuccessful]);
 
   return (
     <>
@@ -81,7 +87,7 @@ export const EventForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCan
               <Typography.Title level={5}>Select event parameters:</Typography.Title>
             </Row>
             <Row justify='center'>
-              {errors.eventDate?.message && <ErrorMessage error={errors.eventDate.message} />}
+              {errors.eventDate?.message && <ErrorMessage error={errors.eventDate.message} width={200} />}
               <Controller
                 name='eventDate'
                 control={control}
@@ -90,6 +96,7 @@ export const EventForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCan
                     <DatePicker
                       picker='date'
                       showTime
+                      style={errors.eventDate?.message ? { marginLeft: '15px' } : { marginLeft: 0 }}
                       onChange={(val) => onChange(moment(val).format('YYYY-MM-DD HH:mm:ss'))}
                       format='YYYY-MM-DD HH:mm:ss'
                       onBlur={onBlur}

@@ -6,12 +6,6 @@
 
 }
 
-.form {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .submitBtn {
   background-color: #001529 !important;
   color: #fff !important;

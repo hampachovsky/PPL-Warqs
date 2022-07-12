@@ -38,6 +38,8 @@ export const SignInForm: React.FC = () => {
       rememberMe: false,
     },
     resolver: yupResolver(validationSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onSubmit',
   });
   const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
 

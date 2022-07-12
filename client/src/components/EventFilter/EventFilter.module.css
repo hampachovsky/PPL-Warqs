@@ -1,0 +1,45 @@
+
+
+.filterBtn {
+  background: #001529;
+  color: #fff;
+  width: 300px;
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.searchInput {
+  width: 600px;
+}
+
+
+@media (max-width: 1100px) { 
+  .filterBtn {
+    width: 200px;
+  }
+  .searchInput {
+    width: 400px;
+  }
+ }
+
+ 
+@media (max-width: 750px) { 
+  .filterBtn {
+    width: 100px;
+  }
+  .searchInput {
+    width: 300px;
+  }
+ }
+
+ @media (max-width: 500px) { 
+  .filterBtn {
+    width: 100%;
+  }
+  .searchInput {
+    width: 100%;
+  }
+ }

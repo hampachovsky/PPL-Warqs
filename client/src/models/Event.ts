@@ -1,8 +1,8 @@
-import { Moment } from 'moment';
+import { ITask } from './ITask';
 
 export enum eventType {
   minor = 'minor',
-  warning = 'warnings',
+  warning = 'warning',
   important = 'important',
 }
 
@@ -12,7 +12,9 @@ export interface IEvent {
   text: string;
   eventType: eventType;
   eventDate: string;
-  author: string;
-  tasks: string[];
+  tasks: ITask[];
 }
-export type EventFormType = Omit<IEvent, 'author' | '_id' | 'tasks'>;
+
+export type EventFormType = Omit<IEvent, '_id' | 'tasks'>;
+
+export type EventListDataType = Omit<IEvent, 'tasks'>;

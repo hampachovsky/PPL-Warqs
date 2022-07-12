@@ -25,6 +25,7 @@ TaskSchema.set('toJSON', {
   transform: (document, returnedObject) => {
     delete returnedObject.__v;
     delete returnedObject.createdAt;
+    delete returnedObject.event;
   },
 });
 
