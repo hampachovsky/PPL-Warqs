@@ -7,7 +7,7 @@ import React, { useState } from 'react';
 import style from './EventCalendar.module.css';
 
 export const EventCalendar: React.FC = () => {
-  const [isModalVisible, setModalVisibility] = useState(true);
+  const [isModalVisible, setModalVisibility] = useState(false);
 
   const onCancel = () => {
     setModalVisibility(false);

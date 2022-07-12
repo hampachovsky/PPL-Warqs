@@ -48,6 +48,8 @@ export const SignUpForm: React.FC = () => {
       confirmPassword: '',
     },
     resolver: yupResolver(validationSchema),
+    mode: 'onBlur',
+    reValidateMode: 'onSubmit',
   });
   const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
 
