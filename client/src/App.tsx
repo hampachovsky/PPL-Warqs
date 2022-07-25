@@ -9,9 +9,10 @@ import { Register } from 'pages/Register';
 import { Home } from 'pages/Home';
 import { Events } from 'pages/Events';
 import { EventPage } from 'pages/EventPage';
+import { useAppSelector } from 'hooks/redux';
 
 const App: React.FC = () => {
-  const isAuth = true;
+  const isAuth = useAppSelector((state) => state.userReducer.isAuth);
   return (
     <>
       {isAuth ? (

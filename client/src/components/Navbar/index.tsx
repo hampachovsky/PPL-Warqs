@@ -1,19 +1,23 @@
 import { MenuOutlined } from '@ant-design/icons';
 import { Col, Image, Menu, MenuProps, Row } from 'antd';
 import logoUrl from 'assets/logo.svg';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { routes } from 'routes';
+import { logout } from 'store/slices/userSlice/userSlice';
 import style from './Navbar.module.css';
 
 // , onClick: () => useNavigate('/', { replace: true })
 export const Navbar: React.FC = () => {
   const [current, setCurrent] = useState('/');
   const navigate = useNavigate();
+  const username = useAppSelector((state) => state.userReducer.user?.username);
+  const dispatch = useAppDispatch();
   const menuItems: MenuProps['items'] = [
     { label: 'Calendar', key: '/', onClick: () => navigate('/', { replace: true }) },
     { label: 'Events', key: 'events', onClick: () => navigate('/events', { replace: true }) },
-    { label: 'Logout', key: 'logout', onClick: () => navigate('/logout', { replace: true }) },
+    { label: `Logout (${username})`, key: 'logout', onClick: () => dispatch(logout()) },
   ];
   const onClick: MenuProps['onClick'] = (e) => {
     console.log('click ', e);

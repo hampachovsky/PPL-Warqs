@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import * as yup from 'yup';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import style from './forms.module.css';
@@ -8,6 +8,9 @@ import { Link } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { routes } from 'routes';
 import { ErrorMessage } from './ErrorMessage';
+import { LoadingStatus, SignInPayload as IFormInput } from 'models/utilsTypes';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { fetchSignIn } from 'store/slices/userSlice/thunk';
 
 const validationSchema = yup
   .object()
@@ -18,19 +21,15 @@ const validationSchema = yup
   })
   .required();
 
-interface IFormInput {
-  username: string;
-  password: string;
-  rememberMe: boolean;
-}
-
 // TODO: If Remeber me checked = window.localstorage.set(token) esle nothing...;
 export const SignInForm: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const status = useAppSelector((state) => state.userReducer.status);
+  const error = useAppSelector((state) => state.userReducer.error);
+  const dispatch = useAppDispatch();
   const {
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isDirty, isValid, isSubmitting, isSubmitSuccessful },
   } = useForm<IFormInput>({
     defaultValues: {
       username: '',
@@ -41,7 +40,10 @@ export const SignInForm: React.FC = () => {
     mode: 'onBlur',
     reValidateMode: 'onSubmit',
   });
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    await dispatch(fetchSignIn(data));
+  };
 
   return (
     <div>
@@ -50,6 +52,7 @@ export const SignInForm: React.FC = () => {
       </Typography.Title>
       <form action='submit' onSubmit={handleSubmit(onSubmit)}>
         <Space align='center' direction='vertical'>
+          {error && <ErrorMessage error={error} />}
           {errors.username?.message && <ErrorMessage error={errors.username.message} />}
           <Controller
             name='username'
@@ -75,12 +78,12 @@ export const SignInForm: React.FC = () => {
           />
 
           <Button
-            disabled={!!errors}
+            disabled={!isDirty || !isValid || isSubmitting}
             className={style.submitBtn}
             size='large'
             type='primary'
             htmlType='submit'
-            loading={isLoading}
+            loading={status === LoadingStatus.LOADING}
           >
             Log in
           </Button>

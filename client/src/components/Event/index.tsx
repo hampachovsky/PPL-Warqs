@@ -16,6 +16,8 @@ export const Event: React.FC<PropsType> = ({ event }) => {
   const [selectedTask, setSelectedTask] = useState<null | ITask>(null);
   const { text, title, _id, tasks } = event;
 
+  // TODO: useCallbeck for Optimization
+
   const onCancel = () => {
     setEditable(false);
     setModalVisibility(false);

@@ -29,7 +29,7 @@ class AuthController {
 
   async login(req, res) {
     try {
-      const { username, password } = req.body;
+      const { username, password, rememberMe } = req.body;
       if (!(password || username)) return res.status(500).json({ error: 'User data missing' });
       const user = await User.findOne({ username });
       if (!user) return res.status(404).json({ error: 'User not found' });
@@ -39,7 +39,7 @@ class AuthController {
         username: user.username,
         _id: user._id,
       };
-      const token = jwt.sign(userForToken, process.env.SECRET_KEY, { noTimestamp: true });
+      const token = jwt.sign(userForToken, process.env.SECRET_KEY, { expiresIn: rememberMe ? '365d' : '10h' });
       res.status(200).json({ token, user });
     } catch (e) {
       console.log(e);
