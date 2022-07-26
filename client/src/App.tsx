@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import 'antd/dist/antd.min.css';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { routes } from 'routes';
@@ -9,11 +9,23 @@ import { Register } from 'pages/Register';
 import { Home } from 'pages/Home';
 import { Events } from 'pages/Events';
 import { EventPage } from 'pages/EventPage';
-import { useAppSelector } from 'hooks/redux';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { fetchUserData } from 'store/slices/userSlice/thunk';
+import { LoadingStatus } from 'models/utilsTypes';
+import { Preloader } from 'components/Preloader';
 
 const App: React.FC = () => {
   const isAuth = useAppSelector((state) => state.userReducer.isAuth);
-  return (
+  const status = useAppSelector((state) => state.userReducer.status);
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUserData());
+  }, [dispatch]);
+
+  return status === LoadingStatus.LOADING ? (
+    <Preloader />
+  ) : (
     <>
       {isAuth ? (
         <MainLayout>

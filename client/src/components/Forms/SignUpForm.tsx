@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
-import * as yup from 'yup';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import style from './forms.module.css';
-import { Button, Input, Space, Typography } from 'antd';
-import { Link } from 'react-router-dom';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { Button, Input, Space, Typography } from 'antd';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { LoadingStatus, SignUpPayload as IFormInput } from 'models/utilsTypes';
+import React from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
 import { routes } from 'routes';
+import { fetchSignUp } from 'store/slices/userSlice/thunk';
+import { setLoadingStatus } from 'store/slices/userSlice/userSlice';
+import * as yup from 'yup';
 import { ErrorMessage } from './ErrorMessage';
+import style from './forms.module.css';
 
 const validationSchema = yup
   .object()
@@ -28,19 +32,16 @@ const validationSchema = yup
   })
   .required();
 
-interface IFormInput {
-  username: string;
-  password: string;
-  confirmPassword: string;
-}
-
-// TODO: If Remeber me checked = window.localstorage.set(token) esle nothing...;
 export const SignUpForm: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const status = useAppSelector((state) => state.userReducer.status);
+  const error = useAppSelector((state) => state.userReducer.error);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const {
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isDirty, isValid, isSubmitting },
   } = useForm<IFormInput>({
     defaultValues: {
       username: '',
@@ -51,7 +52,15 @@ export const SignUpForm: React.FC = () => {
     mode: 'onBlur',
     reValidateMode: 'onSubmit',
   });
-  const onSubmit: SubmitHandler<IFormInput> = (data) => console.log(data);
+
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    dispatch(fetchSignUp(data));
+  };
+
+  if (status === LoadingStatus.SUCCESS) {
+    navigate('/login', { replace: true });
+    dispatch(setLoadingStatus(LoadingStatus.IDLE));
+  }
 
   return (
     <div>
@@ -60,6 +69,7 @@ export const SignUpForm: React.FC = () => {
       </Typography.Title>
       <form action='submit' onSubmit={handleSubmit(onSubmit)}>
         <Space align='center' direction='vertical'>
+          {error && <ErrorMessage error={error} />}
           {errors.username?.message && <ErrorMessage error={errors.username.message} />}
           <Controller
             name='username'
@@ -84,12 +94,12 @@ export const SignUpForm: React.FC = () => {
           />
 
           <Button
-            disabled={false}
+            disabled={!isDirty || !isValid || isSubmitting}
             className={style.submitBtn}
             size='large'
             type='primary'
             htmlType='submit'
-            loading={isLoading}
+            loading={status === LoadingStatus.LOADING}
           >
             Register
           </Button>

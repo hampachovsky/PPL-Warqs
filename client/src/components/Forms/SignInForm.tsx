@@ -1,16 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import * as yup from 'yup';
-import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import style from './forms.module.css';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Input, Space, Typography } from 'antd';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
-import { Link } from 'react-router-dom';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { routes } from 'routes';
-import { ErrorMessage } from './ErrorMessage';
-import { LoadingStatus, SignInPayload as IFormInput } from 'models/utilsTypes';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { LoadingStatus, SignInPayload as IFormInput } from 'models/utilsTypes';
+import React from 'react';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
+import { routes } from 'routes';
 import { fetchSignIn } from 'store/slices/userSlice/thunk';
+import * as yup from 'yup';
+import { ErrorMessage } from './ErrorMessage';
+import style from './forms.module.css';
 
 const validationSchema = yup
   .object()
@@ -26,10 +26,11 @@ export const SignInForm: React.FC = () => {
   const status = useAppSelector((state) => state.userReducer.status);
   const error = useAppSelector((state) => state.userReducer.error);
   const dispatch = useAppDispatch();
+
   const {
     handleSubmit,
     control,
-    formState: { errors, isDirty, isValid, isSubmitting, isSubmitSuccessful },
+    formState: { errors, isDirty, isValid, isSubmitting },
   } = useForm<IFormInput>({
     defaultValues: {
       username: '',

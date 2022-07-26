@@ -14,6 +14,12 @@ export interface SignInPayload {
   rememberMe: boolean;
 }
 
+export interface SignUpPayload {
+  username: string;
+  password: string;
+  confirmPassword: string;
+}
+
 export interface SignInResponse {
   token: string;
   user: IUser;
