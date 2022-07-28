@@ -8,3 +8,13 @@
 .addEventBtn:hover {
   color: #1890ff; 
 }
+
+.eventItem {
+  color: black;
+  font-weight: 600 !important;
+  font-size: 17px !important;
+}
+
+.eventItem:hover {
+  color: #1890ff;
+}

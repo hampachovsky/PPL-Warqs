@@ -1,11 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Input, Space, Typography } from 'antd';
+import { Dictionary } from 'constatns/dictionary';
+import { RoutesPath } from 'constatns/routes';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { LoadingStatus, SignUpPayload as IFormInput } from 'models/utilsTypes';
 import React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
-import { routes } from 'routes';
+import { selectUserIsLoading, selectUserStatusSuccess } from 'store/slices/userSlice/selectors';
 import { fetchSignUp } from 'store/slices/userSlice/thunk';
 import { setLoadingStatus } from 'store/slices/userSlice/userSlice';
 import * as yup from 'yup';
@@ -33,7 +35,8 @@ const validationSchema = yup
   .required();
 
 export const SignUpForm: React.FC = () => {
-  const status = useAppSelector((state) => state.userReducer.status);
+  const isLoading = useAppSelector(selectUserIsLoading);
+  const isSuccess = useAppSelector(selectUserStatusSuccess);
   const error = useAppSelector((state) => state.userReducer.error);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -57,7 +60,7 @@ export const SignUpForm: React.FC = () => {
     dispatch(fetchSignUp(data));
   };
 
-  if (status === LoadingStatus.SUCCESS) {
+  if (isSuccess) {
     navigate('/login', { replace: true });
     dispatch(setLoadingStatus(LoadingStatus.IDLE));
   }
@@ -65,7 +68,7 @@ export const SignUpForm: React.FC = () => {
   return (
     <div>
       <Typography.Title style={{ textAlign: 'center' }} level={2}>
-        Register
+        {Dictionary.REGISTER}
       </Typography.Title>
       <form action='submit' onSubmit={handleSubmit(onSubmit)}>
         <Space align='center' direction='vertical'>
@@ -99,13 +102,13 @@ export const SignUpForm: React.FC = () => {
             size='large'
             type='primary'
             htmlType='submit'
-            loading={status === LoadingStatus.LOADING}
+            loading={isLoading}
           >
-            Register
+            {Dictionary.REGISTER}
           </Button>
           <div>
             <Typography.Title level={5}>
-              Or <Link to={routes.LOGIN}>login now!</Link>
+              {Dictionary.OR} <Link to={RoutesPath.LOGIN}>{Dictionary.LOGIN} now!</Link>
             </Typography.Title>
           </div>
         </Space>

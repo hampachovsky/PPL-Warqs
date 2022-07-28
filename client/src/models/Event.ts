@@ -1,4 +1,4 @@
-import { ITask } from './ITask';
+import { LoadingStatus } from './utilsTypes';
 
 export enum eventType {
   minor = 'minor',
@@ -12,7 +12,12 @@ export interface IEvent {
   text: string;
   eventType: eventType;
   eventDate: string;
-  tasks: ITask[];
+}
+
+export interface EventState {
+  events: IEvent[] | null;
+  status: LoadingStatus;
+  error: string | null;
 }
 
 export type EventFormType = Omit<IEvent, '_id' | 'tasks'>;

@@ -1,13 +1,21 @@
 import { Typography } from 'antd';
 import { TaskForm } from 'components/Forms/TaskForm';
 import { TodoList } from 'components/TodoList';
-import { IEvent } from 'models/Event';
+import { eventType } from 'models/Event';
 import { ITask, TaskFormType } from 'models/ITask';
 import React, { useState } from 'react';
 import style from './Event.module.css';
 
+//TODO: SHOULD FIX
 type PropsType = {
-  event: IEvent;
+  event: {
+    _id: string;
+    title: string;
+    text: string;
+    eventType: eventType;
+    eventDate: string;
+    tasks: ITask[];
+  };
 };
 
 export const Event: React.FC<PropsType> = ({ event }) => {

@@ -10,7 +10,7 @@ class EventController {
       if (!user) {
         return res.status(500).json({ error: 'User from token not found' });
       }
-      const events = await Event.find({ author: user._id }).populate('tasks');
+      const events = await Event.find({ author: user._id });
       return res.status(200).json(events);
     } catch (error) {
       console.log(error);

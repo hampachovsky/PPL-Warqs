@@ -6,6 +6,7 @@ import { EventListDataType, eventType } from 'models/Event';
 import moment from 'moment';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { eventTypeTagColor } from 'utils/eventTypeColorPick';
 
 const columns: ColumnsType<EventListDataType> = [
   {
@@ -37,16 +38,7 @@ const columns: ColumnsType<EventListDataType> = [
     width: 100,
     render: (_, record) => (
       <>
-        <Tag
-          key={record._id}
-          color={
-            record.eventType === eventType.important
-              ? 'red'
-              : record.eventType === eventType.minor
-              ? 'blue'
-              : eventType.warning
-          }
-        >
+        <Tag key={record._id} color={eventTypeTagColor(record.eventType)}>
           {record.eventType}
         </Tag>
       </>

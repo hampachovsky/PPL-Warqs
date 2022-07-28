@@ -4,7 +4,7 @@ import logoUrl from 'assets/logo.svg';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { routes } from 'routes';
+import { RoutesPath } from 'constatns/routes';
 import { logout } from 'store/slices/userSlice/userSlice';
 import style from './Navbar.module.css';
 
@@ -15,8 +15,8 @@ export const Navbar: React.FC = () => {
   const username = useAppSelector((state) => state.userReducer.user?.username);
   const dispatch = useAppDispatch();
   const menuItems: MenuProps['items'] = [
-    { label: 'Calendar', key: '/', onClick: () => navigate('/', { replace: true }) },
-    { label: 'Events', key: 'events', onClick: () => navigate('/events', { replace: true }) },
+    { label: 'Calendar', key: '/', onClick: () => navigate(RoutesPath.HOME, { replace: true }) },
+    { label: 'Events', key: 'events', onClick: () => navigate(RoutesPath.EVENTS, { replace: true }) },
     { label: `Logout (${username})`, key: 'logout', onClick: () => dispatch(logout()) },
   ];
   const onClick: MenuProps['onClick'] = (e) => {
@@ -27,7 +27,7 @@ export const Navbar: React.FC = () => {
     <>
       <Row justify='space-around'>
         <Col span={5}>
-          <Link className={style.logoWraper} to={routes.HOME}>
+          <Link className={style.logoWraper} to={RoutesPath.HOME}>
             <Image className={style.logo} preview={false} src={logoUrl} />
           </Link>
         </Col>

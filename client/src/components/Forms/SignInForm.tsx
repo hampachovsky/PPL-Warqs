@@ -1,12 +1,14 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Input, Space, Typography } from 'antd';
 import Checkbox from 'antd/lib/checkbox/Checkbox';
+import { Dictionary } from 'constatns/dictionary';
+import { RoutesPath } from 'constatns/routes';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { LoadingStatus, SignInPayload as IFormInput } from 'models/utilsTypes';
+import { SignInPayload as IFormInput } from 'models/utilsTypes';
 import React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { routes } from 'routes';
+import { selectUserIsLoading } from 'store/slices/userSlice/selectors';
 import { fetchSignIn } from 'store/slices/userSlice/thunk';
 import * as yup from 'yup';
 import { ErrorMessage } from './ErrorMessage';
@@ -21,9 +23,8 @@ const validationSchema = yup
   })
   .required();
 
-// TODO: If Remeber me checked = window.localstorage.set(token) esle nothing...;
 export const SignInForm: React.FC = () => {
-  const status = useAppSelector((state) => state.userReducer.status);
+  const isLoading = useAppSelector(selectUserIsLoading);
   const error = useAppSelector((state) => state.userReducer.error);
   const dispatch = useAppDispatch();
 
@@ -49,7 +50,7 @@ export const SignInForm: React.FC = () => {
   return (
     <div>
       <Typography.Title style={{ textAlign: 'center' }} level={2}>
-        Log In
+        {Dictionary.LOGIN}
       </Typography.Title>
       <form action='submit' onSubmit={handleSubmit(onSubmit)}>
         <Space align='center' direction='vertical'>
@@ -84,13 +85,13 @@ export const SignInForm: React.FC = () => {
             size='large'
             type='primary'
             htmlType='submit'
-            loading={status === LoadingStatus.LOADING}
+            loading={isLoading}
           >
-            Log in
+            {Dictionary.LOGIN}
           </Button>
           <div>
             <Typography.Title level={5}>
-              Or <Link to={routes.REGISTER}>register now!</Link>
+              Or <Link to={RoutesPath.REGISTER}>{Dictionary.REGISTER} now!</Link>
             </Typography.Title>
           </div>
         </Space>

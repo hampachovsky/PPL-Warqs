@@ -1,10 +1,20 @@
 import { Event } from 'components/Event';
 import { eventType, IEvent } from 'models/Event';
+import { ITask } from 'models/ITask';
 import moment from 'moment';
 import React from 'react';
 
+type TESTTYPE = {
+  _id: string;
+  title: string;
+  text: string;
+  eventType: eventType;
+  eventDate: string;
+  tasks: ITask[];
+};
+
 export const EventPage: React.FC = () => {
-  const event: IEvent = {
+  const event: TESTTYPE = {
     _id: '62c45cc592e3e723d7996a00',
     title: 'woooooooow',
     text: 'Lorem ipsum dolor sit amet consectetur, adipisicing elit. In molestias laborum vel tempore tempora ullam.',

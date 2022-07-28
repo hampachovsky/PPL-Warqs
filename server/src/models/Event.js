@@ -40,6 +40,7 @@ EventSchema.set('toJSON', {
     delete returnedObject.__v;
     delete returnedObject.createdAt;
     delete returnedObject.author;
+    delete returnedObject.tasks;
   },
 });
 
