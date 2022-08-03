@@ -2,7 +2,9 @@ import { Button, Space, Tag, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import Table from 'antd/lib/table';
 import { EventFilter } from 'components/EventFilter';
-import { EventListDataType, eventType } from 'models/Event';
+import { DateFormat } from 'constatns/formats';
+import { useAppSelector } from 'hooks/redux';
+import { EventListDataType } from 'models/Event';
 import moment from 'moment';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -13,7 +15,7 @@ const columns: ColumnsType<EventListDataType> = [
     title: 'Title',
     dataIndex: 'title',
     key: 'title',
-    width: 100,
+    width: 150,
     render: (_, record) => (
       <Link key={record._id} to={`/events/${record._id}`}>
         {record.title}
@@ -24,10 +26,12 @@ const columns: ColumnsType<EventListDataType> = [
     title: 'Date',
     dataIndex: 'eventDate',
     key: 'eventDate',
-    width: 100,
+    width: 150,
     render: (_, record) => (
       <>
-        <Typography.Text key={record._id}>{record.eventDate}</Typography.Text>
+        <Typography.Text key={record._id}>
+          {moment(record.eventDate).format(DateFormat.WITH_MINUTES_FORMAT)}
+        </Typography.Text>
       </>
     ),
   },
@@ -47,10 +51,10 @@ const columns: ColumnsType<EventListDataType> = [
   {
     title: 'Action',
     key: 'action',
-    width: 250,
+    width: 50,
     render: (_, record) => (
       <Space size='middle'>
-        <Button type='link'>Edit {record.title}</Button>
+        <Button type='link'>Edit</Button>
         <Button type='link'>Delete</Button>
       </Space>
     ),
@@ -58,29 +62,7 @@ const columns: ColumnsType<EventListDataType> = [
 ];
 
 export const EventList: React.FC = () => {
-  const data: EventListDataType[] = [
-    {
-      _id: '1',
-      title: 'Some shit',
-      text: 'realy shit',
-      eventType: eventType.minor,
-      eventDate: moment().format('YYYY-MM-DD'),
-    },
-    {
-      _id: '2',
-      title: 'Jim Green',
-      text: 'blablwwwwwwwwwwwwwwwabla',
-      eventType: eventType.warning,
-      eventDate: moment('2022-07-11').format('YYYY-MM-DD'),
-    },
-    {
-      _id: '3',
-      title: 'Joe Black',
-      text: 'new text',
-      eventType: eventType.important,
-      eventDate: moment('2022-07-10').format('YYYY-MM-DD'),
-    },
-  ];
+  const events = useAppSelector((state) => state.eventReducer.events);
   return (
     <>
       <EventFilter />
@@ -98,7 +80,7 @@ export const EventList: React.FC = () => {
             </>
           ),
         }}
-        dataSource={data}
+        dataSource={events!}
       />
     </>
   );

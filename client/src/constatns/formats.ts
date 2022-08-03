@@ -1,0 +1,6 @@
+export enum DateFormat {
+  BASIC_FORMAT = 'YYYY-MM-DD',
+  WITH_HOURS_FORMAT = 'YYYY-MM-DD HH',
+  WITH_MINUTES_FORMAT = 'YYYY-MM-DD HH:mm',
+  WITH_SECONDS_FORMAT = 'YYYY-MM-DD HH:mm:ss',
+}

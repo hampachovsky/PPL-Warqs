@@ -1,6 +1,8 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, DatePicker, Input, Modal, Radio, Row, Space, Typography } from 'antd';
-import { EventFormType, eventType } from 'models/Event';
+import { DateFormat } from 'constatns/formats';
+import { eventType } from 'models/Event';
+import { EventPayloadType as EventFormType } from 'models/utilsTypes';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -30,7 +32,7 @@ export const EventForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCan
       title: '',
       text: '',
       eventType: eventType.minor,
-      eventDate: moment().format('YYYY-MM-DD HH:mm:ss'),
+      eventDate: moment().format(DateFormat.WITH_SECONDS_FORMAT),
     },
     resolver: yupResolver(isEditing ? editEventSchema : createEventSchema),
     mode: 'onBlur',
@@ -38,8 +40,7 @@ export const EventForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCan
   });
 
   const onClickSumbit: SubmitHandler<EventFormType> = (data) => {
-    console.log('data', data);
-    console.log('evt date', moment(data.eventDate).format());
+    onSubmit(data);
   };
 
   useEffect(() => {
@@ -97,10 +98,10 @@ export const EventForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCan
                       picker='date'
                       showTime
                       style={errors.eventDate?.message ? { marginLeft: '15px' } : { marginLeft: 0 }}
-                      onChange={(val) => onChange(moment(val).format('YYYY-MM-DD HH:mm:ss'))}
-                      format='YYYY-MM-DD HH:mm:ss'
+                      onChange={(val) => onChange(moment(val).format(DateFormat.WITH_SECONDS_FORMAT))}
+                      format={DateFormat.WITH_SECONDS_FORMAT}
                       onBlur={onBlur}
-                      defaultValue={moment(value, 'YYYY-MM-DD HH:mm')}
+                      defaultValue={moment(value, DateFormat.WITH_SECONDS_FORMAT)}
                     />
                   </>
                 )}

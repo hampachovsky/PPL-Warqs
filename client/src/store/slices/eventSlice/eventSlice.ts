@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { EventState } from 'models/Event';
 import { LoadingStatus } from 'models/utilsTypes';
-import { fetchEvents } from './thunk';
+import { fetchCreateEvent, fetchEvents } from './thunk';
 
 const initialState: EventState = {
   events: null,
@@ -10,7 +10,7 @@ const initialState: EventState = {
 };
 
 export const eventSlice = createSlice({
-  name: 'user',
+  name: 'event',
   initialState,
   reducers: {
     setLoadingStatus: (state, action: PayloadAction<LoadingStatus>) => {
@@ -28,6 +28,24 @@ export const eventSlice = createSlice({
       state.error = null;
     });
     builder.addCase(fetchEvents.rejected, (state, { payload }) => {
+      state.status = LoadingStatus.ERORR;
+      if (typeof payload === 'string') {
+        state.error = payload;
+      } else {
+        state.error = 'unknown error';
+      }
+    });
+
+    builder.addCase(fetchCreateEvent.fulfilled, (state, { payload }) => {
+      state.events?.push(payload);
+      state.error = null;
+      state.status = LoadingStatus.SUCCESS;
+    });
+    builder.addCase(fetchCreateEvent.pending, (state) => {
+      state.status = LoadingStatus.LOADING;
+      state.error = null;
+    });
+    builder.addCase(fetchCreateEvent.rejected, (state, { payload }) => {
       state.status = LoadingStatus.ERORR;
       if (typeof payload === 'string') {
         state.error = payload;

@@ -1,3 +1,4 @@
+import { IEvent } from 'models/Event';
 import { IUser } from './IUser';
 import { AxiosError } from 'axios';
 
@@ -24,5 +25,7 @@ export interface SignInResponse {
   token: string;
   user: IUser;
 }
+
+export type EventPayloadType = Omit<IEvent, '_id' | 'tasks'>;
 
 export type RequestErrorType = AxiosError<{ error: string }>;

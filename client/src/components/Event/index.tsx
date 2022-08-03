@@ -3,7 +3,7 @@ import { TaskForm } from 'components/Forms/TaskForm';
 import { TodoList } from 'components/TodoList';
 import { eventType } from 'models/Event';
 import { ITask, TaskFormType } from 'models/ITask';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import style from './Event.module.css';
 
 //TODO: SHOULD FIX
@@ -24,43 +24,42 @@ export const Event: React.FC<PropsType> = ({ event }) => {
   const [selectedTask, setSelectedTask] = useState<null | ITask>(null);
   const { text, title, _id, tasks } = event;
 
-  // TODO: useCallbeck for Optimization
-
-  const onCancel = () => {
+  const onCancel = useCallback(() => {
     setEditable(false);
     setModalVisibility(false);
-  };
+  }, []);
 
-  const onSubmit = (data: TaskFormType) => {
+  const onSubmit = useCallback(async (data: TaskFormType) => {
     console.log(`new text for task: ${JSON.stringify(data)} and eventId: ${_id}`);
     setModalVisibility(false);
-  };
+  }, []);
 
-  const onAddTask = () => {
+  const onAddTask = useCallback(() => {
     setModalVisibility(true);
-  };
+  }, []);
 
-  const onEdit = (task: ITask) => {
+  const onEdit = useCallback((task: ITask) => {
     setSelectedTask(task);
     console.log(task);
     setEditable(true);
     setModalVisibility(true);
-  };
+  }, []);
 
-  const onEditSubmit = (data: TaskFormType) => {
+  const onEditSubmit = useCallback((data: TaskFormType) => {
     console.log(`new text for task: ${JSON.stringify(data)}`);
     console.log(selectedTask?._id);
     setEditable(false);
     setModalVisibility(false);
-  };
+  }, []);
 
-  const onTaskToggle = (task: ITask) => {
+  const onTaskToggle = useCallback((task: ITask) => {
     console.log('task complete toggled', task);
-  };
+  }, []);
 
-  const onTaskRemoval = (task: ITask) => {
+  const onTaskRemoval = useCallback((task: ITask) => {
     console.log('task removed', task);
-  };
+  }, []);
+
   return (
     <div>
       <Typography.Title style={{ textAlign: 'center' }} level={2}>

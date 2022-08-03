@@ -20,6 +20,4 @@ export interface EventState {
   error: string | null;
 }
 
-export type EventFormType = Omit<IEvent, '_id' | 'tasks'>;
-
 export type EventListDataType = Omit<IEvent, 'tasks'>;

@@ -1,26 +1,30 @@
 import { Badge, Button, Calendar, Row, Spin } from 'antd';
-import { CalendarMode } from 'antd/lib/calendar/generateCalendar';
 import { EventForm } from 'components/Forms/EventForm';
-import { useAppSelector } from 'hooks/redux';
-import { EventFormType } from 'models/Event';
+import { Dictionary } from 'constatns/dictionary';
+import { DateFormat } from 'constatns/formats';
+import { RoutesPath } from 'constatns/routes';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { EventPayloadType as EventFormType } from 'models/utilsTypes';
 import type { Moment } from 'moment';
 import moment from 'moment';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { RoutesPath } from 'constatns/routes';
 import { selectEventsIsLoading } from 'store/slices/eventSlice/selectors';
+import { fetchCreateEvent } from 'store/slices/eventSlice/thunk';
 import { eventTypeBadgeColor } from 'utils/eventTypeColorPick';
 import style from './EventCalendar.module.css';
-import { Dictionary } from 'constatns/dictionary';
 
 export const EventCalendar: React.FC = () => {
   const [isModalVisible, setModalVisibility] = useState(false);
   const isLoading = useAppSelector(selectEventsIsLoading);
   const events = useAppSelector((state) => state.eventReducer.events);
+  const dispatch = useAppDispatch();
 
-  function dateCellRender(value: Moment) {
-    const formatedDate = value.format('YYYY-MM-DD');
-    const currentDayEvents = events?.filter((ev) => moment(ev.eventDate).format('YYYY-MM-DD') === formatedDate);
+  const dateCellRender = (value: Moment) => {
+    const formatedDate = value.format(DateFormat.BASIC_FORMAT);
+    const currentDayEvents = events?.filter(
+      (ev) => moment(ev.eventDate).format(DateFormat.BASIC_FORMAT) === formatedDate,
+    );
     return (
       <div>
         {currentDayEvents?.map((ev, index) => (
@@ -37,26 +41,24 @@ export const EventCalendar: React.FC = () => {
         ))}
       </div>
     );
-  }
+  };
 
-  const onCancel = () => {
+  const onCancel = useCallback(() => {
     setModalVisibility(false);
-  };
+  }, []);
 
-  //TODO: Usecallback
-  const onSubmit = (data: EventFormType) => {
-    console.log(data);
-    setModalVisibility(false);
-  };
-
-  const onPanelChange = (value: Moment, mode: CalendarMode) => {
-    console.log(value.format(), mode);
-  };
+  const onSubmit = useCallback(
+    async (data: EventFormType) => {
+      await dispatch(fetchCreateEvent(data));
+      setModalVisibility(false);
+    },
+    [dispatch],
+  );
 
   return (
     <div>
       <Spin spinning={isLoading} tip={Dictionary.LOADING}>
-        <Calendar onPanelChange={onPanelChange} dateCellRender={dateCellRender} />
+        <Calendar dateCellRender={dateCellRender} />
       </Spin>
       <Row justify='center'>
         <Button
