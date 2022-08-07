@@ -25,3 +25,18 @@ export const fetchCreateEvent = createAsyncThunk(
     }
   },
 );
+
+export const fetchUpdateEvent = createAsyncThunk('event/fetchUpdateEvent', async (payload: IEvent, thunkAPI) => {
+  try {
+    const response = await eventAPI.update(payload);
+    return response;
+  } catch (error) {
+    const err = error as RequestErrorType;
+    return thunkAPI.rejectWithValue(err.response?.data.error);
+  }
+});
+
+export const fetchDeleteEvent = createAsyncThunk('event/fetchDeleteEvent', async (payload: string, thunkAPI) => {
+  await eventAPI.delete(payload);
+  return payload;
+});

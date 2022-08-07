@@ -1,4 +1,4 @@
-import { LoadingStatus } from './utilsTypes';
+import { State } from './utilsTypes';
 
 export enum eventType {
   minor = 'minor',
@@ -14,10 +14,6 @@ export interface IEvent {
   eventDate: string;
 }
 
-export interface EventState {
-  events: IEvent[] | null;
-  status: LoadingStatus;
-  error: string | null;
+export interface EventState extends State {
+  events: IEvent[];
 }
-
-export type EventListDataType = Omit<IEvent, 'tasks'>;

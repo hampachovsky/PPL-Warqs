@@ -9,7 +9,7 @@ import type { Moment } from 'moment';
 import moment from 'moment';
 import React, { useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { selectEventsIsLoading } from 'store/slices/eventSlice/selectors';
+import { selectAllEvents, selectEventsIsLoading } from 'store/slices/eventSlice/selectors';
 import { fetchCreateEvent } from 'store/slices/eventSlice/thunk';
 import { eventTypeBadgeColor } from 'utils/eventTypeColorPick';
 import style from './EventCalendar.module.css';
@@ -17,7 +17,7 @@ import style from './EventCalendar.module.css';
 export const EventCalendar: React.FC = () => {
   const [isModalVisible, setModalVisibility] = useState(false);
   const isLoading = useAppSelector(selectEventsIsLoading);
-  const events = useAppSelector((state) => state.eventReducer.events);
+  const events = useAppSelector(selectAllEvents);
   const dispatch = useAppDispatch();
 
   const dateCellRender = (value: Moment) => {

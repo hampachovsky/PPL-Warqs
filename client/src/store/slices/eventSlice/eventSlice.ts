@@ -1,13 +1,17 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { EventState } from 'models/Event';
-import { LoadingStatus } from 'models/utilsTypes';
-import { fetchCreateEvent, fetchEvents } from './thunk';
+import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { IEvent } from 'models/Event';
+import { LoadingStatus, State } from 'models/utilsTypes';
+import { fetchCreateEvent, fetchDeleteEvent, fetchEvents, fetchUpdateEvent } from './thunk';
 
-const initialState: EventState = {
-  events: null,
+export const eventAdapter = createEntityAdapter<IEvent>({
+  selectId: (event) => event._id,
+});
+
+const initialState = eventAdapter.getInitialState<State>({
+  // events: [],
   status: LoadingStatus.IDLE,
   error: null,
-};
+});
 
 export const eventSlice = createSlice({
   name: 'event',
@@ -19,7 +23,7 @@ export const eventSlice = createSlice({
   },
   extraReducers(builder) {
     builder.addCase(fetchEvents.fulfilled, (state, { payload }) => {
-      state.events = payload;
+      eventAdapter.setAll(state, payload);
       state.error = null;
       state.status = LoadingStatus.SUCCESS;
     });
@@ -37,7 +41,7 @@ export const eventSlice = createSlice({
     });
 
     builder.addCase(fetchCreateEvent.fulfilled, (state, { payload }) => {
-      state.events?.push(payload);
+      eventAdapter.addOne(state, payload);
       state.error = null;
       state.status = LoadingStatus.SUCCESS;
     });
@@ -52,6 +56,34 @@ export const eventSlice = createSlice({
       } else {
         state.error = 'unknown error';
       }
+    });
+
+    builder.addCase(fetchUpdateEvent.fulfilled, (state, { payload }) => {
+      eventAdapter.setOne(state, payload);
+      state.error = null;
+      state.status = LoadingStatus.SUCCESS;
+    });
+    builder.addCase(fetchUpdateEvent.pending, (state) => {
+      state.status = LoadingStatus.LOADING;
+      state.error = null;
+    });
+    builder.addCase(fetchUpdateEvent.rejected, (state, { payload }) => {
+      state.status = LoadingStatus.ERORR;
+      if (typeof payload === 'string') {
+        state.error = payload;
+      } else {
+        state.error = 'unknown error';
+      }
+    });
+
+    builder.addCase(fetchDeleteEvent.fulfilled, (state, { payload }) => {
+      eventAdapter.removeOne(state, payload);
+      state.error = null;
+      state.status = LoadingStatus.SUCCESS;
+    });
+    builder.addCase(fetchDeleteEvent.pending, (state) => {
+      state.status = LoadingStatus.LOADING;
+      state.error = null;
     });
   },
 });

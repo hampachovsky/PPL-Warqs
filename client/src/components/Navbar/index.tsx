@@ -8,7 +8,6 @@ import { RoutesPath } from 'constatns/routes';
 import { logout } from 'store/slices/userSlice/userSlice';
 import style from './Navbar.module.css';
 
-// , onClick: () => useNavigate('/', { replace: true })
 export const Navbar: React.FC = () => {
   const [current, setCurrent] = useState('/');
   const navigate = useNavigate();
@@ -20,7 +19,6 @@ export const Navbar: React.FC = () => {
     { label: `Logout (${username})`, key: 'logout', onClick: () => dispatch(logout()) },
   ];
   const onClick: MenuProps['onClick'] = (e) => {
-    console.log('click ', e);
     setCurrent(e.key);
   };
   return (

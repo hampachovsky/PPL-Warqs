@@ -1,11 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, DatePicker, Input, Modal, Radio, Row, Space, Typography } from 'antd';
 import { DateFormat } from 'constatns/formats';
-import { eventType } from 'models/Event';
+import { useAppSelector } from 'hooks/redux';
+import { eventType, IEvent } from 'models/Event';
 import { EventPayloadType as EventFormType } from 'models/utilsTypes';
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { selectEventsIsLoading } from 'store/slices/eventSlice/selectors';
 import { capitalizeFirstLetter } from 'utils/capitalizeFirstLetter';
 import { ErrorMessage } from '../ErrorMessage';
 import style from './EventForm.module.css';
@@ -17,10 +19,12 @@ type PropsType = {
   isEditing?: boolean;
   onSubmit: (data: EventFormType) => void;
   onCancel: () => void;
+  event?: IEvent | null;
 };
 
-export const EventForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCancel, isEditing = false }) => {
-  const [isLoading, setIsLoading] = useState(false);
+export const EventForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCancel, isEditing = false, event }) => {
+  const isLoading = useAppSelector(selectEventsIsLoading);
+  const error = useAppSelector((state) => state.eventReducer.error);
 
   const {
     handleSubmit,
@@ -34,6 +38,7 @@ export const EventForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCan
       eventType: eventType.minor,
       eventDate: moment().format(DateFormat.WITH_SECONDS_FORMAT),
     },
+
     resolver: yupResolver(isEditing ? editEventSchema : createEventSchema),
     mode: 'onBlur',
     reValidateMode: 'onSubmit',
@@ -44,14 +49,24 @@ export const EventForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCan
   };
 
   useEffect(() => {
+    reset({
+      title: event?.title,
+      text: event?.text,
+      eventType: event?.eventType,
+      eventDate: moment(event?.eventDate).format(DateFormat.WITH_SECONDS_FORMAT),
+    });
+  }, [event, reset]);
+
+  useEffect(() => {
     reset();
-  }, [isSubmitSuccessful]);
+  }, [isSubmitSuccessful, reset]);
 
   return (
     <>
       <Modal title={isEditing ? 'Edit event' : 'Add event'} visible={isModalVisible} footer={null} onCancel={onCancel}>
         <form className={style.form} action='submit' onSubmit={handleSubmit(onClickSumbit)}>
           <Space direction='vertical'>
+            {error && <ErrorMessage error={error} />}
             <Row justify='center' align='middle'>
               {errors.title?.message && <ErrorMessage error={errors.title.message} width={300} />}
               <Controller
@@ -94,15 +109,27 @@ export const EventForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCan
                 control={control}
                 render={({ field: { onChange, value, onBlur } }) => (
                   <>
-                    <DatePicker
-                      picker='date'
-                      showTime
-                      style={errors.eventDate?.message ? { marginLeft: '15px' } : { marginLeft: 0 }}
-                      onChange={(val) => onChange(moment(val).format(DateFormat.WITH_SECONDS_FORMAT))}
-                      format={DateFormat.WITH_SECONDS_FORMAT}
-                      onBlur={onBlur}
-                      defaultValue={moment(value, DateFormat.WITH_SECONDS_FORMAT)}
-                    />
+                    {isEditing ? (
+                      <DatePicker
+                        picker='date'
+                        showTime
+                        style={errors.eventDate?.message ? { marginLeft: '15px' } : { marginLeft: 0 }}
+                        onChange={(val) => onChange(moment(val).format(DateFormat.WITH_SECONDS_FORMAT))}
+                        format={DateFormat.WITH_SECONDS_FORMAT}
+                        onBlur={onBlur}
+                        value={moment(value, DateFormat.WITH_SECONDS_FORMAT)}
+                      />
+                    ) : (
+                      <DatePicker
+                        picker='date'
+                        showTime
+                        style={errors.eventDate?.message ? { marginLeft: '15px' } : { marginLeft: 0 }}
+                        onChange={(val) => onChange(moment(val).format(DateFormat.WITH_SECONDS_FORMAT))}
+                        format={DateFormat.WITH_SECONDS_FORMAT}
+                        onBlur={onBlur}
+                        defaultValue={moment(value)}
+                      />
+                    )}
                   </>
                 )}
               />

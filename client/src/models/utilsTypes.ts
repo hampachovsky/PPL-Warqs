@@ -9,6 +9,11 @@ export enum LoadingStatus {
   ERORR = 'ERROR',
 }
 
+export interface State {
+  status: LoadingStatus;
+  error: string | null;
+}
+
 export interface SignInPayload {
   username: string;
   password: string;
@@ -26,6 +31,6 @@ export interface SignInResponse {
   user: IUser;
 }
 
-export type EventPayloadType = Omit<IEvent, '_id' | 'tasks'>;
+export type EventPayloadType = Omit<IEvent, '_id'>;
 
 export type RequestErrorType = AxiosError<{ error: string }>;

@@ -1,5 +1,5 @@
 import { Event } from 'components/Event';
-import { eventType, IEvent } from 'models/Event';
+import { eventType } from 'models/Event';
 import { ITask } from 'models/ITask';
 import moment from 'moment';
 import React from 'react';

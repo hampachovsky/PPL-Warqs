@@ -29,10 +29,13 @@ export const Event: React.FC<PropsType> = ({ event }) => {
     setModalVisibility(false);
   }, []);
 
-  const onSubmit = useCallback(async (data: TaskFormType) => {
-    console.log(`new text for task: ${JSON.stringify(data)} and eventId: ${_id}`);
-    setModalVisibility(false);
-  }, []);
+  const onSubmit = useCallback(
+    async (data: TaskFormType) => {
+      console.log(`new text for task: ${JSON.stringify(data)} and eventId: ${_id}`);
+      setModalVisibility(false);
+    },
+    [_id],
+  );
 
   const onAddTask = useCallback(() => {
     setModalVisibility(true);
@@ -45,12 +48,15 @@ export const Event: React.FC<PropsType> = ({ event }) => {
     setModalVisibility(true);
   }, []);
 
-  const onEditSubmit = useCallback((data: TaskFormType) => {
-    console.log(`new text for task: ${JSON.stringify(data)}`);
-    console.log(selectedTask?._id);
-    setEditable(false);
-    setModalVisibility(false);
-  }, []);
+  const onEditSubmit = useCallback(
+    (data: TaskFormType) => {
+      console.log(`new text for task: ${JSON.stringify(data)}`);
+      console.log(selectedTask?._id);
+      setEditable(false);
+      setModalVisibility(false);
+    },
+    [selectedTask?._id],
+  );
 
   const onTaskToggle = useCallback((task: ITask) => {
     console.log('task complete toggled', task);
