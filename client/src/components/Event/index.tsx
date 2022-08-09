@@ -14,15 +14,15 @@ type PropsType = {
     text: string;
     eventType: eventType;
     eventDate: string;
-    tasks: ITask[];
   };
+  tasks: ITask[];
 };
 
-export const Event: React.FC<PropsType> = ({ event }) => {
+export const Event: React.FC<PropsType> = ({ event, tasks }) => {
   const [isModalVisible, setModalVisibility] = useState(false);
   const [isEditable, setEditable] = useState(false);
   const [selectedTask, setSelectedTask] = useState<null | ITask>(null);
-  const { text, title, _id, tasks } = event;
+  const { text, title, _id } = event;
 
   const onCancel = useCallback(() => {
     setEditable(false);
@@ -43,7 +43,6 @@ export const Event: React.FC<PropsType> = ({ event }) => {
 
   const onEdit = useCallback((task: ITask) => {
     setSelectedTask(task);
-    console.log(task);
     setEditable(true);
     setModalVisibility(true);
   }, []);
@@ -80,14 +79,14 @@ export const Event: React.FC<PropsType> = ({ event }) => {
         onEdit={onEdit}
       />
       {isEditable && selectedTask ? (
+        <TaskForm isEditing={isEditable} isModalVisible={isModalVisible} onSubmit={onSubmit} onCancel={onCancel} />
+      ) : (
         <TaskForm
           isModalVisible={isModalVisible}
           onSubmit={onEditSubmit}
           onCancel={onCancel}
           text={selectedTask?.text}
         />
-      ) : (
-        <TaskForm isEditing={isEditable} isModalVisible={isModalVisible} onSubmit={onSubmit} onCancel={onCancel} />
       )}
     </div>
   );

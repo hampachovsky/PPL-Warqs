@@ -10,7 +10,7 @@ class EventController {
       if (!user) {
         return res.status(500).json({ error: 'User from token not found' });
       }
-      const events = await Event.find({ author: user._id });
+      const events = await Event.find({ author: user._id }, { tasks: 0 });
       return res.status(200).json(events);
     } catch (error) {
       console.log(error);
@@ -42,8 +42,9 @@ class EventController {
         author: user._id,
       };
       const event = await Event.create(eventToAdd);
+      const resEvent = await Event.findById(event._id, { tasks: 0 });
       await User.findByIdAndUpdate(user._id, { ...user, events: user.events.push(event._id) });
-      return res.status(200).json(event);
+      return res.status(200).json(resEvent);
     } catch (error) {
       console.log(error);
       return res.status(400).json({ error: 'failed create event' });
@@ -68,7 +69,8 @@ class EventController {
       return res.status(400).json({ error: 'Incorrect event type' });
     }
     const updatedEvent = await Event.findByIdAndUpdate(id, body, { new: true });
-    return res.status(200).json(updatedEvent);
+    const event = await Event.findById(updatedEvent._id, { tasks: 0 });
+    return res.status(200).json(event);
   }
   catch(error) {
     console.log(error);
@@ -100,12 +102,12 @@ class EventController {
       const eventType = req.query.type;
       const date = req.query.date;
       const queryString = req.query.queryString;
-      let events = await Event.find();
+      let events = await Event.find().projection({ tasks: 0 });
       if (queryString) {
         const regexQuery = {
           title: new RegExp(req.query.queryString, 'i'),
         };
-        events = await Event.find(regexQuery);
+        events = await Event.find(regexQuery, { tasks: 0 });
       }
       if (eventType === 'minor' || eventType === 'warning' || eventType === 'important') {
         events = events.filter((event) => event.eventType === eventType);
@@ -133,8 +135,8 @@ class EventController {
       if (!id) {
         res.status(400).json({ error: 'Id not provided' });
       }
-      const event = await Event.find({ _id: id, author: user._id });
-      return res.status(200).json(event);
+      const event = await Event.find({ _id: id, author: user._id }).populate('tasks');
+      return res.status(200).send(event);
     } catch (error) {
       console.log(error);
       return res.status(400).json({ error: 'failed take event' });

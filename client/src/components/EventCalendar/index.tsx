@@ -1,4 +1,4 @@
-import { Badge, Button, Calendar, Row, Spin } from 'antd';
+import { Badge, Button, Calendar, notification, Row, Spin } from 'antd';
 import { EventForm } from 'components/Forms/EventForm';
 import { Dictionary } from 'constatns/dictionary';
 import { DateFormat } from 'constatns/formats';
@@ -18,7 +18,10 @@ export const EventCalendar: React.FC = () => {
   const [isModalVisible, setModalVisibility] = useState(false);
   const isLoading = useAppSelector(selectEventsIsLoading);
   const events = useAppSelector(selectAllEvents);
+  const error = useAppSelector((state) => state.eventReducer.error);
   const dispatch = useAppDispatch();
+
+  if (error) notification.error({ placement: 'topRight', duration: 3, message: error });
 
   const dateCellRender = (value: Moment) => {
     const formatedDate = value.format(DateFormat.BASIC_FORMAT);
@@ -68,7 +71,7 @@ export const EventCalendar: React.FC = () => {
           size='large'
           onClick={() => setModalVisibility(true)}
         >
-          Add Event
+          {Dictionary.ADD_EVENT}
         </Button>
         <EventForm isEditing={false} isModalVisible={isModalVisible} onCancel={onCancel} onSubmit={onSubmit} />
       </Row>

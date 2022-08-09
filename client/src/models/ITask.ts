@@ -6,8 +6,4 @@ export interface ITask {
   completed: boolean;
 }
 
-export interface TaskState extends State {
-  tasks: ITask[] | null;
-}
-
 export type TaskFormType = Omit<ITask, '_id' | 'completed'>;

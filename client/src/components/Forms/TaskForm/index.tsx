@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Button, Input, Modal, Row, Space } from 'antd';
+import { Button, Input, Modal, Row } from 'antd';
+import { Dictionary } from 'constatns/dictionary';
 import { TaskFormType } from 'models/ITask';
 import React, { useEffect, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
@@ -27,7 +28,6 @@ export const TaskForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCanc
 
   const {
     handleSubmit,
-    register,
     control,
     reset,
     formState: { errors, isDirty, isValid, isSubmitting, isSubmitSuccessful },
@@ -42,13 +42,13 @@ export const TaskForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCanc
 
   useEffect(() => {
     reset({ text });
-  }, [text]);
+  }, [reset, text]);
 
   useEffect(() => {
     reset({
       text: '',
     });
-  }, [isSubmitSuccessful]);
+  }, [isSubmitSuccessful, reset]);
 
   const onClickSumbit: SubmitHandler<TaskFormType> = (data) => {
     setIsLoading(true);
@@ -58,7 +58,12 @@ export const TaskForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCanc
 
   return (
     <>
-      <Modal title={isEditing ? 'Edit task' : 'Add task'} visible={isModalVisible} footer={null} onCancel={onCancel}>
+      <Modal
+        title={isEditing ? Dictionary.EDIT_TASK : Dictionary.ADD_TASK}
+        visible={isModalVisible}
+        footer={null}
+        onCancel={onCancel}
+      >
         <form className={style.form} action='submit' onSubmit={handleSubmit(onClickSumbit)}>
           <Row justify='center' align='middle'>
             {errors.text?.message && <ErrorMessage error={errors.text.message} width={300} />}
@@ -87,7 +92,7 @@ export const TaskForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCanc
               htmlType='submit'
               loading={isLoading}
             >
-              Submit
+              {Dictionary.SUBMIT}
             </Button>
           </Row>
         </form>

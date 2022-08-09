@@ -7,4 +7,11 @@ export enum Dictionary {
   REGISTER = 'Register',
   LOGIN = 'Log in',
   OR = 'Or',
+  ADD_TASK = 'Add task',
+  EDIT_TASK = 'Edit task',
+  MARK_AS_COMPLETED = 'Mark as completed',
+  MARK_AS_UNCOMPLETED = 'Mark as uncompleted',
+  SUBMIT = 'Submit',
+  EDIT_EVENT = 'Edit event',
+  ADD_EVENT = 'Add Event',
 }

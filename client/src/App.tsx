@@ -15,7 +15,6 @@ import { selectUserIsLoading } from 'store/slices/userSlice/selectors';
 import { fetchUserData } from 'store/slices/userSlice/thunk';
 
 const App: React.FC = () => {
-  const isAuth = useAppSelector((state) => state.userReducer.isAuth);
   const isLoading = useAppSelector(selectUserIsLoading);
   const dispatch = useAppDispatch();
 
@@ -26,26 +25,48 @@ const App: React.FC = () => {
   return isLoading ? (
     <Preloader />
   ) : (
-    <>
-      {isAuth ? (
-        <MainLayout>
-          <Routes>
-            <Route path={RoutesPath.HOME} element={<Home />} />
-            <Route path={RoutesPath.EVENTS} element={<Events />} />
-            <Route path={RoutesPath.EVENT} element={<EventPage />} />
-            <Route path='*' element={<Navigate to={RoutesPath.HOME} />} />
-          </Routes>
-        </MainLayout>
-      ) : (
-        <AuthLayout>
-          <Routes>
-            <Route path={RoutesPath.LOGIN} element={<Login />} />
-            <Route path={RoutesPath.REGISTER} element={<Register />} />
-            <Route path='*' element={<Navigate to={RoutesPath.LOGIN} />} />
-          </Routes>
-        </AuthLayout>
-      )}
-    </>
+    <Routes>
+      <Route
+        path={RoutesPath.LOGIN}
+        element={
+          <AuthLayout>
+            <Login />
+          </AuthLayout>
+        }
+      />
+      <Route
+        path={RoutesPath.REGISTER}
+        element={
+          <AuthLayout>
+            <Register />
+          </AuthLayout>
+        }
+      />
+      <Route
+        path={RoutesPath.HOME}
+        element={
+          <MainLayout>
+            <Home />
+          </MainLayout>
+        }
+      />
+      <Route
+        path={RoutesPath.EVENTS}
+        element={
+          <MainLayout>
+            <Events />
+          </MainLayout>
+        }
+      />
+      <Route
+        path={RoutesPath.EVENT}
+        element={
+          <MainLayout>
+            <EventPage />
+          </MainLayout>
+        }
+      />
+    </Routes>
   );
 };
 

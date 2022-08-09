@@ -13,7 +13,3 @@ export interface IEvent {
   eventType: eventType;
   eventDate: string;
 }
-
-export interface EventState extends State {
-  events: IEvent[];
-}

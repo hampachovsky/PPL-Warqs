@@ -7,6 +7,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { RoutesPath } from 'constatns/routes';
 import { logout } from 'store/slices/userSlice/userSlice';
 import style from './Navbar.module.css';
+import { MenuItems } from 'constatns/menuItems';
 
 export const Navbar: React.FC = () => {
   const [current, setCurrent] = useState('/');
@@ -14,9 +15,16 @@ export const Navbar: React.FC = () => {
   const username = useAppSelector((state) => state.userReducer.user?.username);
   const dispatch = useAppDispatch();
   const menuItems: MenuProps['items'] = [
-    { label: 'Calendar', key: '/', onClick: () => navigate(RoutesPath.HOME, { replace: true }) },
-    { label: 'Events', key: 'events', onClick: () => navigate(RoutesPath.EVENTS, { replace: true }) },
-    { label: `Logout (${username})`, key: 'logout', onClick: () => dispatch(logout()) },
+    { label: MenuItems.CALENDAR, key: '/', onClick: () => navigate(RoutesPath.HOME, { replace: true }) },
+    { label: MenuItems.EVENTS, key: 'events', onClick: () => navigate(RoutesPath.EVENTS, { replace: true }) },
+    {
+      label: `${MenuItems.LOGOUT} (${username})`,
+      key: 'logout',
+      onClick: () => {
+        dispatch(logout());
+        navigate(RoutesPath.LOGIN, { replace: true });
+      },
+    },
   ];
   const onClick: MenuProps['onClick'] = (e) => {
     setCurrent(e.key);

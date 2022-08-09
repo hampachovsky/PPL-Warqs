@@ -8,7 +8,6 @@ export const eventAdapter = createEntityAdapter<IEvent>({
 });
 
 const initialState = eventAdapter.getInitialState<State>({
-  // events: [],
   status: LoadingStatus.IDLE,
   error: null,
 });

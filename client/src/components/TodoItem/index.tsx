@@ -3,6 +3,7 @@ import { Button, Col, List, Popconfirm, Row, Switch, Tag, Tooltip, Typography } 
 import { ITask } from 'models/ITask';
 import style from './TodoItem.module.css';
 import React from 'react';
+import { Dictionary } from 'constatns/dictionary';
 
 type PropsType = {
   task: ITask;
@@ -15,7 +16,7 @@ export const TodoItem: React.FC<PropsType> = ({ task, onTaskRemoval, onTaskToggl
   return (
     <List.Item
       actions={[
-        <Tooltip title={task.completed ? 'Mark as uncompleted' : 'Mark as completed'}>
+        <Tooltip title={task.completed ? Dictionary.MARK_AS_UNCOMPLETED : Dictionary.MARK_AS_COMPLETED}>
           <Switch
             checkedChildren={<CheckOutlined />}
             unCheckedChildren={<CloseOutlined />}
@@ -23,7 +24,7 @@ export const TodoItem: React.FC<PropsType> = ({ task, onTaskRemoval, onTaskToggl
             defaultChecked={task.completed}
           />
         </Tooltip>,
-        <Tooltip title='Edit task'>
+        <Tooltip title={Dictionary.EDIT_TASK}>
           <Button type='primary' onClick={() => onEdit(task)}>
             <ToolOutlined />
           </Button>

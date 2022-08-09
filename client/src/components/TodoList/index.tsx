@@ -1,5 +1,6 @@
 import { Button, Col, List, Row, Typography } from 'antd';
 import { TodoItem } from 'components/TodoItem';
+import { Dictionary } from 'constatns/dictionary';
 import { ITask } from 'models/ITask';
 import React from 'react';
 import style from './TodoList.module.css';
@@ -22,7 +23,7 @@ export const TodoList: React.FC<PropsType> = ({ tasks, onTaskToggle, onTaskRemov
       </Col>
       <Col span={24} style={{ display: 'flex', justifyContent: 'center', marginBottom: '3.5em', marginTop: '0.5em' }}>
         <Button type='primary' size='large' className={style.addTodoBtn} onClick={onAddTask}>
-          Add todo
+          {Dictionary.ADD_TASK}
         </Button>
       </Col>
       <Col span={24}>

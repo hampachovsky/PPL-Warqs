@@ -1,5 +1,6 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, DatePicker, Input, Modal, Radio, Row, Space, Typography } from 'antd';
+import { Dictionary } from 'constatns/dictionary';
 import { DateFormat } from 'constatns/formats';
 import { useAppSelector } from 'hooks/redux';
 import { eventType, IEvent } from 'models/Event';
@@ -63,7 +64,12 @@ export const EventForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCan
 
   return (
     <>
-      <Modal title={isEditing ? 'Edit event' : 'Add event'} visible={isModalVisible} footer={null} onCancel={onCancel}>
+      <Modal
+        title={isEditing ? Dictionary.EDIT_EVENT : Dictionary.ADD_EVENT}
+        visible={isModalVisible}
+        footer={null}
+        onCancel={onCancel}
+      >
         <form className={style.form} action='submit' onSubmit={handleSubmit(onClickSumbit)}>
           <Space direction='vertical'>
             {error && <ErrorMessage error={error} />}
@@ -159,7 +165,7 @@ export const EventForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCan
                 htmlType='submit'
                 loading={isLoading}
               >
-                Submit
+                {Dictionary.SUBMIT}
               </Button>
             </Row>
           </Space>

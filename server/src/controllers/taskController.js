@@ -11,6 +11,16 @@ class TaskController {
     }
   }
 
+  async getByEvent(req, res) {
+    try {
+      const { id } = req.params;
+      const event = await Event.findById(id).populate('tasks');
+      return res.status(200).json(event.tasks);
+    } catch (e) {
+      return res.status(500).json(e);
+    }
+  }
+
   async create(req, res) {
     try {
       const { text, eventId } = req.body;

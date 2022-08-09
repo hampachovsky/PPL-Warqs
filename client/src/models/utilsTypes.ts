@@ -31,6 +31,10 @@ export interface SignInResponse {
   user: IUser;
 }
 
+export type LocationStateType = {
+  from: { pathname: string };
+};
+
 export type EventPayloadType = Omit<IEvent, '_id'>;
 
 export type RequestErrorType = AxiosError<{ error: string }>;
