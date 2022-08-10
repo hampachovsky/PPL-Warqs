@@ -10,7 +10,7 @@ import { Home } from 'pages/Home';
 import { Login } from 'pages/Login';
 import { Register } from 'pages/Register';
 import React, { useEffect } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { selectUserIsLoading } from 'store/slices/userSlice/selectors';
 import { fetchUserData } from 'store/slices/userSlice/thunk';
 

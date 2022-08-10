@@ -1,6 +1,7 @@
 import { IEvent } from 'models/Event';
 import { IUser } from './IUser';
 import { AxiosError } from 'axios';
+import { ITask } from './ITask';
 
 export enum LoadingStatus {
   IDLE = 'IDLE',
@@ -38,3 +39,8 @@ export type LocationStateType = {
 export type EventPayloadType = Omit<IEvent, '_id'>;
 
 export type RequestErrorType = AxiosError<{ error: string }>;
+
+export type TaskPayloadType = {
+  text: ITask['text'];
+  eventId: IEvent['_id'];
+};

@@ -4,7 +4,7 @@ import { Dictionary } from 'constatns/dictionary';
 import { RoutesPath } from 'constatns/routes';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { LoadingStatus, SignUpPayload as IFormInput } from 'models/utilsTypes';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { selectUserIsLoading, selectUserStatusSuccess } from 'store/slices/userSlice/selectors';
@@ -56,14 +56,16 @@ export const SignUpForm: React.FC = () => {
     reValidateMode: 'onSubmit',
   });
 
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    dispatch(fetchSignUp(data));
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    await dispatch(fetchSignUp(data));
   };
 
-  if (isSuccess) {
-    navigate('/login', { replace: true });
-    dispatch(setLoadingStatus(LoadingStatus.IDLE));
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      navigate('/login', { replace: true });
+      dispatch(setLoadingStatus(LoadingStatus.IDLE));
+    }
+  }, [dispatch, isSuccess, navigate]);
 
   return (
     <div>

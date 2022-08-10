@@ -33,7 +33,6 @@ class TaskController {
         text,
         event: foundedEvent._id,
       };
-      console.log(taskToAdd);
       const task = await Task.create(taskToAdd);
       await Event.findByIdAndUpdate(foundedEvent._id, { ...foundedEvent, tasks: foundedEvent.tasks.push(task._id) });
       return res.status(200).json(task);

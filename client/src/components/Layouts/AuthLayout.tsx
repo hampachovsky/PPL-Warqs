@@ -14,9 +14,9 @@ export const AuthLayout: React.FC<Props> = ({ children }) => {
   const isAuth = useAppSelector((state) => state.userReducer.isAuth);
   const location = useLocation();
   const locationState = location.state as LocationStateType;
-  let redirectPath: string = RoutesPath.HOME;
+  let redirectPath: string = locationState.from.pathname;
   if (locationState && locationState.from.pathname === location.pathname) {
-    redirectPath = locationState.from.pathname;
+    redirectPath = RoutesPath.HOME;
   }
   if (isAuth) return <Navigate to={redirectPath} state={{ from: location }} replace />;
   return (

@@ -6,4 +6,6 @@ export interface ITask {
   completed: boolean;
 }
 
-export type TaskFormType = Omit<ITask, '_id' | 'completed'>;
+export type TaskFormType = {
+  text: ITask['text'];
+};

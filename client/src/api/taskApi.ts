@@ -1,22 +1,22 @@
-import { IEvent } from './../models/Event';
 import { instance } from 'api';
-import { EventPayloadType } from 'models/utilsTypes';
+import { TaskApiRoutes } from 'constatns/apiRoute';
 import { ITask } from 'models/ITask';
+import { TaskPayloadType } from 'models/utilsTypes';
 
 export const taskAPI = {
   async getByEvent(eventId: string): Promise<ITask[]> {
-    const response = await instance.get(`/tasks/ev/${eventId}`);
+    const response = await instance.get(`${TaskApiRoutes.GET_BY_EVENT}${eventId}`);
     return response.data;
   },
-  async create(event: EventPayloadType): Promise<IEvent> {
-    const response = await instance.post('/events', event);
+  async create(payload: TaskPayloadType): Promise<ITask> {
+    const response = await instance.post(TaskApiRoutes.CREATE, payload);
     return response.data;
   },
-  async update(event: IEvent): Promise<IEvent> {
-    const response = await instance.put(`/events/${event._id}`, event);
+  async update(task: ITask): Promise<ITask> {
+    const response = await instance.put(`${TaskApiRoutes.UPDATE}${task._id}`, task);
     return response.data;
   },
-  async delete(id: string) {
-    await instance.delete(`/events/${id}`);
+  async delete(id: ITask['_id']) {
+    await instance.delete(`${TaskApiRoutes.DELETE}${id}`);
   },
 };

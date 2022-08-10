@@ -1,9 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Button, Input, Modal, Row } from 'antd';
 import { Dictionary } from 'constatns/dictionary';
+import { useAppSelector } from 'hooks/redux';
 import { TaskFormType } from 'models/ITask';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
+import { selectTasksIsLoading } from 'store/slices/taskSlice/selectors';
 import * as yup from 'yup';
 import { ErrorMessage } from '../ErrorMessage';
 import style from './TaskForm.module.css';
@@ -23,8 +25,8 @@ type PropsType = {
 };
 
 export const TaskForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCancel, isEditing = false, text = '' }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [prefText, setPrefText] = useState('');
+  const isLoading = useAppSelector(selectTasksIsLoading);
+  const error = useAppSelector((state) => state.taskReducer.error);
 
   const {
     handleSubmit,
@@ -33,7 +35,7 @@ export const TaskForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCanc
     formState: { errors, isDirty, isValid, isSubmitting, isSubmitSuccessful },
   } = useForm<TaskFormType>({
     defaultValues: {
-      text: prefText,
+      text: '',
     },
     resolver: yupResolver(valdiationSchema),
     mode: 'onBlur',
@@ -45,15 +47,11 @@ export const TaskForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCanc
   }, [reset, text]);
 
   useEffect(() => {
-    reset({
-      text: '',
-    });
+    reset();
   }, [isSubmitSuccessful, reset]);
 
   const onClickSumbit: SubmitHandler<TaskFormType> = (data) => {
-    setIsLoading(true);
     onSubmit(data);
-    setIsLoading(false);
   };
 
   return (
@@ -65,6 +63,7 @@ export const TaskForm: React.FC<PropsType> = ({ isModalVisible, onSubmit, onCanc
         onCancel={onCancel}
       >
         <form className={style.form} action='submit' onSubmit={handleSubmit(onClickSumbit)}>
+          {error && <ErrorMessage error={error} />}
           <Row justify='center' align='middle'>
             {errors.text?.message && <ErrorMessage error={errors.text.message} width={300} />}
             <Controller

@@ -1,9 +1,12 @@
-import { Typography } from 'antd';
+import { Spin, Typography } from 'antd';
 import { TaskForm } from 'components/Forms/TaskForm';
 import { TodoList } from 'components/TodoList';
+import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { eventType } from 'models/Event';
 import { ITask, TaskFormType } from 'models/ITask';
 import React, { useCallback, useState } from 'react';
+import { selectTasksIsLoading } from 'store/slices/taskSlice/selectors';
+import { fetchCreateTask, fetchDeleteTask, fetchUpdateTask } from 'store/slices/taskSlice/thunk';
 import style from './Event.module.css';
 
 //TODO: SHOULD FIX
@@ -22,6 +25,9 @@ export const Event: React.FC<PropsType> = ({ event, tasks }) => {
   const [isModalVisible, setModalVisibility] = useState(false);
   const [isEditable, setEditable] = useState(false);
   const [selectedTask, setSelectedTask] = useState<null | ITask>(null);
+  const isLoading = useAppSelector(selectTasksIsLoading);
+  const dispatch = useAppDispatch();
+
   const { text, title, _id } = event;
 
   const onCancel = useCallback(() => {
@@ -31,10 +37,10 @@ export const Event: React.FC<PropsType> = ({ event, tasks }) => {
 
   const onSubmit = useCallback(
     async (data: TaskFormType) => {
-      console.log(`new text for task: ${JSON.stringify(data)} and eventId: ${_id}`);
+      dispatch(fetchCreateTask({ ...data, eventId: _id }));
       setModalVisibility(false);
     },
-    [_id],
+    [_id, dispatch],
   );
 
   const onAddTask = useCallback(() => {
@@ -49,21 +55,29 @@ export const Event: React.FC<PropsType> = ({ event, tasks }) => {
 
   const onEditSubmit = useCallback(
     (data: TaskFormType) => {
-      console.log(`new text for task: ${JSON.stringify(data)}`);
-      console.log(selectedTask?._id);
+      const payload = { ...selectedTask!, text: data.text };
+      dispatch(fetchUpdateTask(payload));
+
       setEditable(false);
       setModalVisibility(false);
     },
-    [selectedTask?._id],
+    [selectedTask, dispatch],
   );
 
-  const onTaskToggle = useCallback((task: ITask) => {
-    console.log('task complete toggled', task);
-  }, []);
+  const onTaskToggle = useCallback(
+    (task: ITask) => {
+      const payload: ITask = { ...task, completed: !task.completed };
+      dispatch(fetchUpdateTask(payload));
+    },
+    [dispatch],
+  );
 
-  const onTaskRemoval = useCallback((task: ITask) => {
-    console.log('task removed', task);
-  }, []);
+  const onTaskRemoval = useCallback(
+    (task: ITask) => {
+      dispatch(fetchDeleteTask(task._id));
+    },
+    [dispatch],
+  );
 
   return (
     <div>
@@ -71,22 +85,25 @@ export const Event: React.FC<PropsType> = ({ event, tasks }) => {
         {title}
       </Typography.Title>
       <Typography.Paragraph className={style.eventText}>{text}</Typography.Paragraph>
-      <TodoList
-        tasks={tasks}
-        onTaskToggle={onTaskToggle}
-        onTaskRemoval={onTaskRemoval}
-        onAddTask={onAddTask}
-        onEdit={onEdit}
-      />
+      <Spin spinning={isLoading}>
+        <TodoList
+          tasks={tasks}
+          onTaskToggle={onTaskToggle}
+          onTaskRemoval={onTaskRemoval}
+          onAddTask={onAddTask}
+          onEdit={onEdit}
+        />
+      </Spin>
       {isEditable && selectedTask ? (
-        <TaskForm isEditing={isEditable} isModalVisible={isModalVisible} onSubmit={onSubmit} onCancel={onCancel} />
-      ) : (
         <TaskForm
+          isEditing={isEditable}
           isModalVisible={isModalVisible}
           onSubmit={onEditSubmit}
           onCancel={onCancel}
           text={selectedTask?.text}
         />
+      ) : (
+        <TaskForm isModalVisible={isModalVisible} onSubmit={onSubmit} onCancel={onCancel} />
       )}
     </div>
   );
