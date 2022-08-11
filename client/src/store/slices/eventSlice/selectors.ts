@@ -11,3 +11,5 @@ export const {
 export const selectEventsStatus = (state: RootState) => state.eventReducer.status;
 
 export const selectEventsIsLoading = (state: RootState) => state.eventReducer.status === LoadingStatus.LOADING;
+
+export const selectEventsFilters = (state: RootState) => state.eventReducer.filters;

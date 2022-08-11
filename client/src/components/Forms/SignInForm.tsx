@@ -4,10 +4,11 @@ import Checkbox from 'antd/lib/checkbox/Checkbox';
 import { Dictionary } from 'constatns/dictionary';
 import { RoutesPath } from 'constatns/routes';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { useClearUserError } from 'hooks/useClearUserError';
 import { SignInPayload as IFormInput } from 'models/utilsTypes';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { selectUserIsLoading } from 'store/slices/userSlice/selectors';
 import { fetchSignIn } from 'store/slices/userSlice/thunk';
 import * as yup from 'yup';
@@ -27,6 +28,7 @@ export const SignInForm: React.FC = () => {
   const isLoading = useAppSelector(selectUserIsLoading);
   const error = useAppSelector((state) => state.userReducer.error);
   const dispatch = useAppDispatch();
+  const { handleClear } = useClearUserError();
 
   const {
     handleSubmit,
@@ -91,7 +93,10 @@ export const SignInForm: React.FC = () => {
           </Button>
           <div>
             <Typography.Title level={5}>
-              Or <Link to={RoutesPath.REGISTER}>{Dictionary.REGISTER} now!</Link>
+              Or{' '}
+              <Link to={RoutesPath.REGISTER} onClick={handleClear}>
+                {Dictionary.REGISTER} now!
+              </Link>
             </Typography.Title>
           </div>
         </Space>

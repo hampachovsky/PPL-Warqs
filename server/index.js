@@ -1,10 +1,10 @@
+import cors from 'cors';
 import express from 'express';
 import mongoose from 'mongoose';
 import { MONGODB_URI, PORT } from './src/config/config.js';
-import router from './src/routes/index.js';
-import cors from 'cors';
-import unknownEndpoint from './src/middleware/unknowEndpoint.js';
 import tokenExtractor from './src/middleware/tokenExtractor.js';
+import unknownEndpoint from './src/middleware/unknowEndpoint.js';
+import router from './src/routes/index.js';
 
 const app = express();
 app.use(express.json());

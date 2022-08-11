@@ -1,5 +1,5 @@
-import Task from '../models/Task.js';
 import Event from '../models/Event.js';
+import Task from '../models/Task.js';
 
 class TaskController {
   async getAll(req, res) {
@@ -82,7 +82,7 @@ class TaskController {
       foundedEvent.tasks = foundedEvent.tasks.filter((t) => t._id.toString() !== task._id);
       await foundedEvent.save();
 
-      await Task.findByIdAndRemove(task._Id, { new: true });
+      await Task.findByIdAndRemove(task._id, { new: true });
       return res.status(200).json(null);
     } catch (error) {
       console.log(error);

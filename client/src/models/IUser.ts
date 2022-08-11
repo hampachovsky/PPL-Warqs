@@ -1,5 +1,4 @@
-import { IEvent } from './Event';
-import { LoadingStatus, State } from './utilsTypes';
+import { State } from './utilsTypes';
 
 export interface IUser {
   _id: string;

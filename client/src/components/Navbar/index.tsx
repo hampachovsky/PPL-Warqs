@@ -1,27 +1,33 @@
 import { MenuOutlined } from '@ant-design/icons';
 import { Col, Image, Menu, MenuProps, Row } from 'antd';
 import logoUrl from 'assets/logo.svg';
+import { MenuItems } from 'constatns/menuItems';
+import { RoutesPath } from 'constatns/routes';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { RoutesPath } from 'constatns/routes';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { resetEventsState } from 'store/slices/eventSlice/eventSlice';
+import { resetTasksState } from 'store/slices/taskSlice/taskSlice';
 import { logout } from 'store/slices/userSlice/userSlice';
 import style from './Navbar.module.css';
-import { MenuItems } from 'constatns/menuItems';
 
 export const Navbar: React.FC = () => {
-  const [current, setCurrent] = useState('/');
   const navigate = useNavigate();
-  const username = useAppSelector((state) => state.userReducer.user?.username);
+  const location = useLocation();
   const dispatch = useAppDispatch();
+  const username = useAppSelector((state) => state.userReducer.user?.username);
+  const [current, setCurrent] = useState(location.pathname);
+
   const menuItems: MenuProps['items'] = [
     { label: MenuItems.CALENDAR, key: '/', onClick: () => navigate(RoutesPath.HOME, { replace: true }) },
-    { label: MenuItems.EVENTS, key: 'events', onClick: () => navigate(RoutesPath.EVENTS, { replace: true }) },
+    { label: MenuItems.EVENTS, key: '/events', onClick: () => navigate(RoutesPath.EVENTS, { replace: true }) },
     {
       label: `${MenuItems.LOGOUT} (${username})`,
       key: 'logout',
       onClick: () => {
         dispatch(logout());
+        dispatch(resetEventsState());
+        dispatch(resetTasksState());
         navigate(RoutesPath.LOGIN, { replace: true });
       },
     },

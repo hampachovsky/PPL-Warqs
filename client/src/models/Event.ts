@@ -1,5 +1,3 @@
-import { State } from './utilsTypes';
-
 export enum eventType {
   minor = 'minor',
   warning = 'warning',

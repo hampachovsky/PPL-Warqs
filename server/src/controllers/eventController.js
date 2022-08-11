@@ -99,12 +99,18 @@ class EventController {
 
   async getBy(req, res) {
     try {
+      const userFromToken = req.user;
+      const user = await User.findById(userFromToken._id);
+      if (!user) {
+        return res.status(500).json({ error: 'User from token not found' });
+      }
+      let events = await Event.find({ author: user._id }, { tasks: 0 });
       const eventType = req.query.type;
       const date = req.query.date;
       const queryString = req.query.queryString;
-      let events = await Event.find().projection({ tasks: 0 });
       if (queryString) {
         const regexQuery = {
+          author: user._id,
           title: new RegExp(req.query.queryString, 'i'),
         };
         events = await Event.find(regexQuery, { tasks: 0 });
@@ -113,9 +119,9 @@ class EventController {
         events = events.filter((event) => event.eventType === eventType);
       }
       if (date === 'earliest') {
-        events = events.sort((a, b) => a.eventDate - b.eventDate);
+        events = events.sort((a, b) => new Date(a.eventDate) - new Date(b.eventDate));
       } else if (date === 'newest') {
-        events = events.sort((a, b) => b.eventDate - a.eventDate);
+        events = events.sort((a, b) => new Date(b.eventDate) - new Date(a.eventDate));
       }
       return res.status(200).json(events);
     } catch (error) {

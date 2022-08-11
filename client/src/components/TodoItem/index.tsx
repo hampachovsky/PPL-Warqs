@@ -1,9 +1,9 @@
 import { CheckOutlined, CloseOutlined, ToolOutlined } from '@ant-design/icons';
 import { Button, Col, List, Popconfirm, Row, Switch, Tag, Tooltip, Typography } from 'antd';
-import { ITask } from 'models/ITask';
-import style from './TodoItem.module.css';
-import React from 'react';
 import { Dictionary } from 'constatns/dictionary';
+import { ITask } from 'models/ITask';
+import React from 'react';
+import style from './TodoItem.module.css';
 
 type PropsType = {
   task: ITask;

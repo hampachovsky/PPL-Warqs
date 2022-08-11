@@ -3,13 +3,15 @@ import type { ColumnsType } from 'antd/es/table';
 import Table from 'antd/lib/table';
 import { EventFilter } from 'components/EventFilter';
 import { EventForm } from 'components/Forms/EventForm';
+import { Dictionary } from 'constatns/dictionary';
 import { DateFormat } from 'constatns/formats';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
 import { IEvent } from 'models/Event';
 import { EventPayloadType as EventFormType } from 'models/utilsTypes';
 import moment from 'moment';
 import React, { useCallback, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import { clearEventsFilters } from 'store/slices/eventSlice/eventSlice';
 import { selectAllEvents, selectEventsIsLoading } from 'store/slices/eventSlice/selectors';
 import { fetchDeleteEvent, fetchUpdateEvent } from 'store/slices/eventSlice/thunk';
 import { eventTypeTagColor } from 'utils/eventTypeColorPick';
@@ -17,6 +19,7 @@ import { eventTypeTagColor } from 'utils/eventTypeColorPick';
 export const EventList: React.FC = () => {
   const [isModalVisible, setModalVisibility] = useState(false);
   const [event, setSelectedEvent] = useState<IEvent | null>(null);
+  const [, setSearchParams] = useSearchParams();
   const dispatch = useAppDispatch();
   const events = useAppSelector(selectAllEvents);
   const isLoading = useAppSelector(selectEventsIsLoading);
@@ -101,6 +104,11 @@ export const EventList: React.FC = () => {
     [dispatch, event?._id],
   );
 
+  const handleClearFilters = () => {
+    setSearchParams({});
+    dispatch(clearEventsFilters());
+  };
+
   return (
     <>
       <EventFilter />
@@ -120,6 +128,13 @@ export const EventList: React.FC = () => {
           ),
         }}
         dataSource={events!}
+        footer={() => (
+          <div style={{ display: 'flex', justifyContent: 'right', alignItems: 'center' }}>
+            <Button type='primary' onClick={handleClearFilters}>
+              {Dictionary.CLEAR_FILETERS}
+            </Button>
+          </div>
+        )}
       />
       <EventForm
         isEditing={true}

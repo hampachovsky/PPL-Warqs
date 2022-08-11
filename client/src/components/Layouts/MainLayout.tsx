@@ -20,7 +20,7 @@ export const MainLayout: React.FC<Props> = ({ children }) => {
         <Navbar />
       </Layout.Header>
       <Layout.Content style={{ padding: '0 50px', minHeight: '100vh', margin: '16px 0' }}>
-        <div style={{ minHeight: '280px', padding: '24px', backgroundColor: '#fff' }}>{children}</div>
+        <div style={{ minHeight: '100vh', padding: '24px', backgroundColor: '#fff' }}>{children}</div>
       </Layout.Content>
       <Footer />
     </Layout>

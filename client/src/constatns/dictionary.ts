@@ -14,4 +14,9 @@ export enum Dictionary {
   SUBMIT = 'Submit',
   EDIT_EVENT = 'Edit event',
   ADD_EVENT = 'Add Event',
+  CLEAR_FILETERS = 'Clear filters',
+  EARLIEST = 'Earliest',
+  NEWEST = 'Newest',
+  SEARCH = 'Search',
+  EVENTS_LIST_TITLE = 'Events list',
 }

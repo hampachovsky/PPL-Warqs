@@ -1,7 +1,7 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import userReducer from './slices/userSlice/userSlice';
 import eventReducer from './slices/eventSlice/eventSlice';
 import taskReducer from './slices/taskSlice/taskSlice';
+import userReducer from './slices/userSlice/userSlice';
 
 const rootReducer = combineReducers({
   userReducer,

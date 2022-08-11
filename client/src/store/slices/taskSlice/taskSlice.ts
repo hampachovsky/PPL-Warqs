@@ -1,4 +1,4 @@
-import { createEntityAdapter, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 import { ITask } from 'models/ITask';
 import { LoadingStatus, State } from 'models/utilsTypes';
 import { fetchCreateTask, fetchDeleteTask, fetchTasks, fetchUpdateTask } from './thunk';
@@ -16,77 +16,72 @@ export const taskSlice = createSlice({
   name: 'task',
   initialState,
   reducers: {
-    setLoadingStatus: (state, action: PayloadAction<LoadingStatus>) => {
-      state.status = action.payload;
+    resetTasksState: (state) => {
+      taskAdapter.removeAll(state);
+      state.status = LoadingStatus.IDLE;
+      state.error = null;
+    },
+    setSuccessStatus: (state) => {
+      state.status = LoadingStatus.SUCCESS;
+      state.error = null;
+    },
+    setLoadingStatus: (state) => {
+      state.status = LoadingStatus.LOADING;
+      state.error = null;
+    },
+    setErrorStatus: (state, error: unknown) => {
+      state.status = LoadingStatus.ERORR;
+      if (typeof error === 'string') {
+        state.error = error;
+      } else {
+        state.error = 'unknown error';
+      }
     },
   },
   extraReducers(builder) {
     builder.addCase(fetchTasks.fulfilled, (state, { payload }) => {
       taskAdapter.setAll(state, payload);
-      state.status = LoadingStatus.SUCCESS;
-      state.error = null;
+      taskSlice.caseReducers.setSuccessStatus(state);
     });
-    builder.addCase(fetchTasks.pending, (state, { payload }) => {
-      state.status = LoadingStatus.LOADING;
-      state.error = null;
+    builder.addCase(fetchTasks.pending, (state) => {
+      taskSlice.caseReducers.setLoadingStatus(state);
     });
     builder.addCase(fetchTasks.rejected, (state, { payload }) => {
-      state.status = LoadingStatus.ERORR;
-      if (typeof payload === 'string') {
-        state.error = payload;
-      } else {
-        state.error = 'unknown error';
-      }
+      taskSlice.caseReducers.setErrorStatus(state, payload);
     });
 
     builder.addCase(fetchCreateTask.fulfilled, (state, { payload }) => {
       taskAdapter.addOne(state, payload);
-      state.error = null;
-      state.status = LoadingStatus.SUCCESS;
+      taskSlice.caseReducers.setSuccessStatus(state);
     });
     builder.addCase(fetchCreateTask.pending, (state) => {
-      state.status = LoadingStatus.LOADING;
-      state.error = null;
+      taskSlice.caseReducers.setLoadingStatus(state);
     });
     builder.addCase(fetchCreateTask.rejected, (state, { payload }) => {
-      state.status = LoadingStatus.ERORR;
-      if (typeof payload === 'string') {
-        state.error = payload;
-      } else {
-        state.error = 'unknown error';
-      }
+      taskSlice.caseReducers.setErrorStatus(state, payload);
     });
 
     builder.addCase(fetchUpdateTask.fulfilled, (state, { payload }) => {
       taskAdapter.setOne(state, payload);
-      state.error = null;
-      state.status = LoadingStatus.SUCCESS;
+      taskSlice.caseReducers.setSuccessStatus(state);
     });
     builder.addCase(fetchUpdateTask.pending, (state) => {
-      state.status = LoadingStatus.LOADING;
-      state.error = null;
+      taskSlice.caseReducers.setLoadingStatus(state);
     });
     builder.addCase(fetchUpdateTask.rejected, (state, { payload }) => {
-      state.status = LoadingStatus.ERORR;
-      if (typeof payload === 'string') {
-        state.error = payload;
-      } else {
-        state.error = 'unknown error';
-      }
+      taskSlice.caseReducers.setErrorStatus(state, payload);
     });
 
     builder.addCase(fetchDeleteTask.fulfilled, (state, { payload }) => {
       taskAdapter.removeOne(state, payload);
-      state.error = null;
-      state.status = LoadingStatus.SUCCESS;
+      taskSlice.caseReducers.setSuccessStatus(state);
     });
     builder.addCase(fetchDeleteTask.pending, (state) => {
-      state.status = LoadingStatus.LOADING;
-      state.error = null;
+      taskSlice.caseReducers.setLoadingStatus(state);
     });
   },
 });
 
 export default taskSlice.reducer;
 
-export const { setLoadingStatus } = taskSlice.actions;
+export const { resetTasksState } = taskSlice.actions;

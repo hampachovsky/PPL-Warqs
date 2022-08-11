@@ -1,8 +1,7 @@
-import User from '../models/User.js';
-import Event from '../models/Event.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { constants } from '../constants/constants.js';
+import User from '../models/User.js';
 
 class AuthController {
   async register(req, res) {

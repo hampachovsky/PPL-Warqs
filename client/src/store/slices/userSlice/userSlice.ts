@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { UserState } from 'models/IUser';
+import { IUser, UserState } from 'models/IUser';
 import { LoadingStatus } from 'models/utilsTypes';
 import { fetchSignIn, fetchSignUp, fetchUserData } from './thunk';
 
@@ -21,64 +21,70 @@ export const userSlice = createSlice({
       state.isAuth = false;
       window.localStorage.removeItem('token');
     },
-    setLoadingStatus: (state, action: PayloadAction<LoadingStatus>) => {
+    setUserStatus: (state, action: PayloadAction<LoadingStatus>) => {
       state.status = action.payload;
     },
-  },
-  extraReducers(builder) {
-    builder.addCase(fetchSignIn.fulfilled, (state, { payload }) => {
+    clearUserError: (state) => {
+      state.error = null;
+    },
+
+    setSuccess: (state) => {
+      state.status = LoadingStatus.SUCCESS;
+      state.error = null;
+    },
+    setSuccessAuth: (state, { payload }: PayloadAction<IUser>) => {
       state.user = payload;
       state.isAuth = true;
       state.error = null;
       state.status = LoadingStatus.SUCCESS;
-    });
-    builder.addCase(fetchSignIn.pending, (state) => {
+    },
+    setLoadingStatus: (state) => {
       state.status = LoadingStatus.LOADING;
       state.error = null;
-    });
-    builder.addCase(fetchSignIn.rejected, (state, { payload }) => {
+    },
+    setErrorStatus: (state, error: unknown) => {
       state.status = LoadingStatus.ERORR;
-      if (typeof payload === 'string') {
-        state.error = payload;
+      if (typeof error === 'string') {
+        state.error = error;
       } else {
         state.error = 'unknown error';
       }
+    },
+  },
+  extraReducers(builder) {
+    builder.addCase(fetchSignIn.fulfilled, (state, payload) => {
+      userSlice.caseReducers.setSuccessAuth(state, payload);
+    });
+    builder.addCase(fetchSignIn.pending, (state) => {
+      userSlice.caseReducers.setLoadingStatus(state);
+    });
+    builder.addCase(fetchSignIn.rejected, (state, { payload }) => {
+      userSlice.caseReducers.setErrorStatus(state, payload);
     });
 
-    builder.addCase(fetchUserData.fulfilled, (state, { payload }) => {
-      state.user = payload;
-      state.isAuth = true;
-      state.error = null;
-      state.status = LoadingStatus.SUCCESS;
+    builder.addCase(fetchUserData.fulfilled, (state, payload) => {
+      userSlice.caseReducers.setSuccessAuth(state, payload);
     });
     builder.addCase(fetchUserData.pending, (state) => {
-      state.status = LoadingStatus.LOADING;
-      state.error = null;
+      userSlice.caseReducers.setLoadingStatus(state);
     });
     builder.addCase(fetchUserData.rejected, (state) => {
       state.status = LoadingStatus.IDLE;
     });
 
     builder.addCase(fetchSignUp.fulfilled, (state) => {
-      state.status = LoadingStatus.SUCCESS;
-      state.error = null;
+      userSlice.caseReducers.setSuccess(state);
     });
     builder.addCase(fetchSignUp.pending, (state) => {
-      state.status = LoadingStatus.LOADING;
-      state.error = null;
+      userSlice.caseReducers.setLoadingStatus(state);
     });
 
     builder.addCase(fetchSignUp.rejected, (state, { payload }) => {
-      state.status = LoadingStatus.ERORR;
-      if (typeof payload === 'string') {
-        state.error = payload;
-      } else {
-        state.error = 'unknown error';
-      }
+      userSlice.caseReducers.setErrorStatus(state, payload);
     });
   },
 });
 
 export default userSlice.reducer;
 
-export const { logout, setLoadingStatus } = userSlice.actions;
+export const { logout, setUserStatus, clearUserError } = userSlice.actions;

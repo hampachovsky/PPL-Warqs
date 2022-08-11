@@ -3,13 +3,15 @@ import { Button, Input, Space, Typography } from 'antd';
 import { Dictionary } from 'constatns/dictionary';
 import { RoutesPath } from 'constatns/routes';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
+import { useClearUserError } from 'hooks/useClearUserError';
 import { LoadingStatus, SignUpPayload as IFormInput } from 'models/utilsTypes';
 import React, { useEffect } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
+
 import { selectUserIsLoading, selectUserStatusSuccess } from 'store/slices/userSlice/selectors';
 import { fetchSignUp } from 'store/slices/userSlice/thunk';
-import { setLoadingStatus } from 'store/slices/userSlice/userSlice';
+import { setUserStatus } from 'store/slices/userSlice/userSlice';
 import * as yup from 'yup';
 import { ErrorMessage } from './ErrorMessage';
 import style from './forms.module.css';
@@ -40,6 +42,7 @@ export const SignUpForm: React.FC = () => {
   const error = useAppSelector((state) => state.userReducer.error);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const { handleClear } = useClearUserError();
 
   const {
     handleSubmit,
@@ -63,7 +66,7 @@ export const SignUpForm: React.FC = () => {
   useEffect(() => {
     if (isSuccess) {
       navigate('/login', { replace: true });
-      dispatch(setLoadingStatus(LoadingStatus.IDLE));
+      dispatch(setUserStatus(LoadingStatus.IDLE));
     }
   }, [dispatch, isSuccess, navigate]);
 
@@ -110,7 +113,10 @@ export const SignUpForm: React.FC = () => {
           </Button>
           <div>
             <Typography.Title level={5}>
-              {Dictionary.OR} <Link to={RoutesPath.LOGIN}>{Dictionary.LOGIN} now!</Link>
+              {Dictionary.OR}{' '}
+              <Link to={RoutesPath.LOGIN} onClick={handleClear}>
+                {Dictionary.LOGIN} now!
+              </Link>
             </Typography.Title>
           </div>
         </Space>

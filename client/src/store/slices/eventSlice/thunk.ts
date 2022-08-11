@@ -1,9 +1,10 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { eventAPI } from 'api/eventApi';
 import { IEvent } from 'models/Event';
-import { EventPayloadType, RequestErrorType } from 'models/utilsTypes';
+import { EventPayloadType, FiltersType, RequestErrorType } from 'models/utilsTypes';
+import { ActionType } from './types';
 
-export const fetchEvents = createAsyncThunk('event/fetchEvents', async (_, thunkAPI) => {
+export const fetchEvents = createAsyncThunk(ActionType.FETCH_EVENTS, async (_, thunkAPI) => {
   try {
     const response = await eventAPI.getAll();
     return response;
@@ -13,8 +14,18 @@ export const fetchEvents = createAsyncThunk('event/fetchEvents', async (_, thunk
   }
 });
 
+export const fetchEventsBy = createAsyncThunk(ActionType.FETCH_EVENTS_BY, async (payload: FiltersType, thunkAPI) => {
+  try {
+    const response = await eventAPI.getBy(payload);
+    return response;
+  } catch (error) {
+    const err = error as RequestErrorType;
+    return thunkAPI.rejectWithValue(err.response?.data.error);
+  }
+});
+
 export const fetchCreateEvent = createAsyncThunk(
-  'event/fetchCreateEvent',
+  ActionType.FETCH_CREATE_EVENTS,
   async (payload: EventPayloadType, thunkAPI) => {
     try {
       const response = await eventAPI.create(payload);
@@ -26,7 +37,7 @@ export const fetchCreateEvent = createAsyncThunk(
   },
 );
 
-export const fetchUpdateEvent = createAsyncThunk('event/fetchUpdateEvent', async (payload: IEvent, thunkAPI) => {
+export const fetchUpdateEvent = createAsyncThunk(ActionType.FETCH_UPDATE_EVENT, async (payload: IEvent, thunkAPI) => {
   try {
     const response = await eventAPI.update(payload);
     return response;
@@ -36,7 +47,7 @@ export const fetchUpdateEvent = createAsyncThunk('event/fetchUpdateEvent', async
   }
 });
 
-export const fetchDeleteEvent = createAsyncThunk('event/fetchDeleteEvent', async (payload: string, thunkAPI) => {
+export const fetchDeleteEvent = createAsyncThunk(ActionType.FETCH_DELETE_EVENT, async (payload: string, thunkAPI) => {
   await eventAPI.delete(payload);
   return payload;
 });

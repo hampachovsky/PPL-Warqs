@@ -1,5 +1,5 @@
-import jwt from 'jsonwebtoken';
 import 'dotenv/config';
+import jwt from 'jsonwebtoken';
 
 const userExtractor = (req, res, next) => {
   try {

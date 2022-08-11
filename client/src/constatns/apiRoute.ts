@@ -8,6 +8,7 @@ export enum EventApiRoutes {
   CREATE = '/events',
   UPDATE = '/events/',
   DELETE = '/events/',
+  GET_BY = '/events',
 }
 export enum TaskApiRoutes {
   GET_BY_EVENT = '/tasks/ev/',

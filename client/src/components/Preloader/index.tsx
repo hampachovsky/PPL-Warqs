@@ -1,5 +1,4 @@
 import loader from 'assets/preloader.svg';
-import React from 'react';
 import style from './Preloader.module.css';
 
 export const Preloader = () => {

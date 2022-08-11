@@ -1,5 +1,3 @@
-import { State } from './utilsTypes';
-
 export interface ITask {
   _id: string;
   text: string;

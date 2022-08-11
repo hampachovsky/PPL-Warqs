@@ -30,7 +30,7 @@ export const EventCalendar: React.FC = () => {
     );
     return (
       <div>
-        {currentDayEvents?.map((ev, index) => (
+        {currentDayEvents?.map((ev) => (
           <div key={ev._id}>
             <Badge
               status={eventTypeBadgeColor(ev.eventType)}

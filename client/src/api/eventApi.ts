@@ -1,11 +1,16 @@
-import { IEvent } from './../models/Event';
 import { instance } from 'api';
-import { EventPayloadType } from 'models/utilsTypes';
 import { EventApiRoutes } from 'constatns/apiRoute';
+import { EventPayloadType } from 'models/utilsTypes';
+import { IEvent } from './../models/Event';
+import { FiltersType } from './../models/utilsTypes';
 
 export const eventAPI = {
   async getAll(): Promise<IEvent[]> {
     const response = await instance.get(EventApiRoutes.GET_ALL);
+    return response.data;
+  },
+  async getBy(payload: FiltersType): Promise<IEvent[]> {
+    const response = await instance.get(EventApiRoutes.GET_BY, { params: payload });
     return response.data;
   },
   async create(event: EventPayloadType): Promise<IEvent> {

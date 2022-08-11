@@ -2,22 +2,15 @@ import { Spin, Typography } from 'antd';
 import { TaskForm } from 'components/Forms/TaskForm';
 import { TodoList } from 'components/TodoList';
 import { useAppDispatch, useAppSelector } from 'hooks/redux';
-import { eventType } from 'models/Event';
+import { IEvent } from 'models/Event';
 import { ITask, TaskFormType } from 'models/ITask';
 import React, { useCallback, useState } from 'react';
 import { selectTasksIsLoading } from 'store/slices/taskSlice/selectors';
 import { fetchCreateTask, fetchDeleteTask, fetchUpdateTask } from 'store/slices/taskSlice/thunk';
 import style from './Event.module.css';
 
-//TODO: SHOULD FIX
 type PropsType = {
-  event: {
-    _id: string;
-    title: string;
-    text: string;
-    eventType: eventType;
-    eventDate: string;
-  };
+  event: IEvent;
   tasks: ITask[];
 };
 
